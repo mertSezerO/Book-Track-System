@@ -16,17 +16,17 @@ class ShelfController:
 
     @staticmethod
     def get_shelf_by_name(shelf_name: str):
-        return session.query(Shelf).get({"name": shelf_name})
+        return session.query(Shelf).filter_by(name=shelf_name).first()
 
     @staticmethod
-    def gather_shelf_books_by_id(shelf_id: str):
-        return session.query(Book).join(Shelf).filter(Shelf.id == shelf_id).all()
+    def find_shelf_books_by_id(shelf_id: str):
+        return session.query(Book).join(Shelf).filter_by(shelf_id=shelf_id).all()
 
     @staticmethod
-    def gather_shelf_books_by_name(shelf_name: str):
+    def find_shelf_books_by_name(shelf_name: str):
         return session.query(Book).join(Shelf).filter(Shelf.name == shelf_name).all()
 
     @staticmethod
     def update_shelf_name(shelf_id: int, new_name: str):
-        session.query(Shelf).filter_by(id=shelf_id).update({"name": new_name})
+        session.query(Shelf).filter_by(shelf_id=shelf_id).update({"name": new_name})
         commit_changes()
