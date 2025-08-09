@@ -4,6 +4,6 @@ from .base import Base
 book_keywords = Table(
     "book_keywords",
     Base.metadata,
-    Column("book_id", Integer, ForeignKey("books.id")),
-    Column("keyword_id", Integer, ForeignKey("keywords.id")),
+    Column("book_id", Integer, ForeignKey("books.book_id")),
+    Column("keyword_id", Integer, ForeignKey("keywords.keyword_id")),
 )

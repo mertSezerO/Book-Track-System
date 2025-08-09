@@ -6,6 +6,9 @@ class ShelfController:
 
     @staticmethod
     def create_shelf(name: str):
+        is_shelf_exist = session.query(Shelf).filter_by(name=name).first()
+        if is_shelf_exist:
+            raise NameError("Shelf already exists!")
         new_shelf = Shelf(name=name)
         session.add(new_shelf)
         commit_changes()
@@ -20,11 +23,13 @@ class ShelfController:
 
     @staticmethod
     def find_shelf_books_by_id(shelf_id: str):
-        return session.query(Book).join(Shelf).filter_by(shelf_id=shelf_id).all()
+        return session.query(Book).join(Book.shelf).filter_by(shelf_id=shelf_id).all()
 
     @staticmethod
     def find_shelf_books_by_name(shelf_name: str):
-        return session.query(Book).join(Shelf).filter(Shelf.name == shelf_name).all()
+        return (
+            session.query(Book).join(Book.shelf).filter(Shelf.name == shelf_name).all()
+        )
 
     @staticmethod
     def update_shelf_name(shelf_id: int, new_name: str):

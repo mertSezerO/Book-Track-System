@@ -16,7 +16,7 @@ class BaseWindow:
 
     def switch_pages(self, new_page: Page = None):
         self.previous_page = self.current_page
-        self.current_page.destroy()
+        self.current_page.pack_forget()
         if new_page:
             self.current_page = new_page
         else:
