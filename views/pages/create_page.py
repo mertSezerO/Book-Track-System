@@ -43,6 +43,11 @@ class CreatePage(Page):
         self.widget_frame = tk.Frame(self, bg=Colour.BACKGROUND_COLOUR.value)
         self.widget_frame.pack(pady=100)
 
+        self.back_button = tk.Button(
+            self, text="Back", command=self.window.back_to_landing_page
+        )
+        self.back_button.pack(pady=10)
+
         if self.relation:
             self.drowdown_label = tk.Label(
                 self.widget_frame, text="Select {}".format(self.relation)
@@ -54,7 +59,22 @@ class CreatePage(Page):
                 self.widget_frame,
                 textvariable=self.drowdown_selected,
                 values=self.dropdown_list,
+                width=50,
+                height=5,
             )
             self.dropdown.pack(pady=10)
 
-        # for column in self.model_columns:
+        self.entries = []
+        for column in self.model_columns:
+            label = tk.Label(self.widget_frame, text=column.name)
+            label.pack(pady=10)
+
+            entry = tk.Entry(self.widget_frame, width=50)
+            entry.pack(pady=10)
+            self.entries.append(entry)
+
+        self.save_button = tk.Button(self, text="Save", command=self.save_record)
+        self.save_button.pack(pady=10)
+
+    def save_record(self):
+        pass

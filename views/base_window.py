@@ -30,6 +30,11 @@ class BaseWindow:
         if self.previous_page:
             self.switch_pages(self.previous_page)
 
+    def back_to_landing_page(self):
+        self.current_page.pack_forget()
+        self.current_page = LandingPage(self.root, self)
+        self.current_page.pack(fill=tk.BOTH, expand=True)
+
     def get_options(self):
         options = deepcopy(self.__options)
         del self.__options
