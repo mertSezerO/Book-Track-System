@@ -8,5 +8,7 @@ class Shelf(Base):
     __tablename__ = "shelves"
     shelf_id = Column(Integer, autoincrement=True, primary_key=True)
     name = Column(String, unique=True, index=True, nullable=False)
-    library_id = Column(Integer, ForeignKey("shelves.library_id"))
+
+    library_id = Column(Integer, ForeignKey("libraries.library_id"))
     library = relationship("Library", back_populates="shelves")
+    books = relationship("Book", back_populates="shelf")

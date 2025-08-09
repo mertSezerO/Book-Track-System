@@ -14,6 +14,10 @@ class LibraryController:
         commit_changes()
 
     @staticmethod
+    def get_libraries():
+        return session.query(Library).all()
+
+    @staticmethod
     def get_library_by_id(library_id: int):
         return session.query(Library).get(library_id)
 

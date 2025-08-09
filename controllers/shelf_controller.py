@@ -14,6 +14,10 @@ class ShelfController:
         commit_changes()
 
     @staticmethod
+    def get_shelves():
+        return session.query(Shelf).all()
+
+    @staticmethod
     def get_shelf_by_id(shelf_id: int):
         return session.query(Shelf).get(shelf_id)
 
