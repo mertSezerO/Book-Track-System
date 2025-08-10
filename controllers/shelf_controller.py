@@ -5,11 +5,11 @@ from util import session, commit_changes
 class ShelfController:
 
     @staticmethod
-    def create_shelf(name: str):
+    def create_shelf(name: str, library_id: int):
         is_shelf_exist = session.query(Shelf).filter_by(name=name).first()
         if is_shelf_exist:
             raise NameError("Shelf already exists!")
-        new_shelf = Shelf(name=name)
+        new_shelf = Shelf(name=name, library_id=library_id)
         session.add(new_shelf)
         commit_changes()
 

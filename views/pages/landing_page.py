@@ -2,6 +2,7 @@ import tkinter as tk
 
 from .page import Page
 from .create_library_page import CreateLibraryPage
+from .create_shelf_page import CreateShelfPage
 from .search_page import SearchPage
 from util import Colour
 from models import Library, Shelf, Book
@@ -85,11 +86,7 @@ class LandingPage(Page):
         self.window.switch_pages(new_page=CreateLibraryPage)
 
     def switch_to_add_shelf(self):
-        pass
-        # self.window.switch_pages(
-        #     new_page=CreatePage,
-        #     options={"class": Shelf, "relation": "Library"},
-        # )
+        self.window.switch_pages(new_page=CreateShelfPage)
 
     def switch_to_add_book(self):
         pass
