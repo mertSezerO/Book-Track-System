@@ -10,11 +10,14 @@ class CreateBookPage(Page):
 
     def __init__(self, parent, window):
         super().__init__(parent, window)
+        self.grid_columnconfigure(0, weight=1)
+        self.grid_columnconfigure(1, weight=0)
+        self.grid_columnconfigure(2, weight=1)
         self.create_widgets()
 
     def create_widgets(self):
-        self.header_frame = tk.Frame(self, bg=Colour.HEADER_BG_COLOUR.value)
-        self.header_frame.pack(pady=50)
+        self.header_frame = tk.Frame(self, bg=Colour.HEADER_BG_COLOUR.value, width=400)
+        self.header_frame.grid(row=0, column=1, pady=5)
 
         self.title_label = tk.Label(
             self.header_frame,
@@ -26,7 +29,12 @@ class CreateBookPage(Page):
         self.title_label.pack(pady=5)
 
         self.widget_frame = tk.Frame(self, bg=Colour.BACKGROUND_COLOUR.value)
-        self.widget_frame.pack(pady=20)
+        self.keyword_frame = tk.Frame(self, bg=Colour.BACKGROUND_COLOUR.value)
+        self.button_frame = tk.Frame(self, bg=Colour.BACKGROUND_COLOUR.value, width=300)
+
+        self.widget_frame.grid(row=1, column=1, pady=10)
+        self.keyword_frame.grid(row=1, column=2, pady=10)
+        self.button_frame.grid(row=2, column=1, pady=10)
 
         library_label = tk.Label(
             self.widget_frame,
@@ -131,32 +139,33 @@ class CreateBookPage(Page):
 
         self.keyword_entries = []
         self.keyword_button = tk.Button(
-            self,
+            self.button_frame,
             text="Add Keyword",
             command=self.add_keyword,
             font=("Arial", 16),
         )
-        self.keyword_button.pack(pady=5)
-
         self.back_button = tk.Button(
-            self,
+            self.button_frame,
             text="Back",
             command=self.window.back_to_landing_page,
             font=("Arial", 16),
         )
-        self.back_button.pack(pady=5)
-
         self.save_button = tk.Button(
-            self,
+            self.button_frame,
             text="Save",
             command=self.save_record,
             font=("Arial", 16),
         )
-        self.save_button.pack(pady=5)
+        self.button_frame.grid_columnconfigure(0, weight=1)
+        self.button_frame.grid_columnconfigure(1, weight=1)
+
+        self.keyword_button.grid(row=0, column=0, columnspan=2, sticky="ew", pady=5)
+        self.back_button.grid(row=1, column=0, sticky="ew", padx=5, pady=5)
+        self.save_button.grid(row=1, column=1, sticky="ew", padx=5, pady=5)
 
     def add_keyword(self):
         label = tk.Label(
-            self.widget_frame,
+            self.keyword_frame,
             text="Keyword " + str(len(self.keyword_entries) + 1),
             bg=Colour.HEADER_BG_COLOUR.value,
             fg=Colour.HEADER_TEXT_COLOUR.value,
@@ -165,8 +174,7 @@ class CreateBookPage(Page):
         label.pack(pady=5)
 
         entry = tk.Entry(
-            self.widget_frame,
-            width=50,
+            self.keyword_frame,
             bg=Colour.WIDGET_BG_COLOUR.value,
             fg=Colour.BACKGROUND_COLOUR.value,
             font=("Arial", 16),
