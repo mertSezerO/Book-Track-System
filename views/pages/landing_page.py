@@ -1,7 +1,7 @@
 import tkinter as tk
 
 from .page import Page
-from .create_page import CreatePage
+from .create_library_page import CreateLibraryPage
 from .search_page import SearchPage
 from util import Colour
 from models import Library, Shelf, Book
@@ -82,22 +82,21 @@ class LandingPage(Page):
         self.add_book_button.pack(pady=5)
 
     def switch_to_create_library(self):
-        self.window.switch_pages(
-            new_page=CreatePage,
-            options={"class": Library, "relation": None},
-        )
+        self.window.switch_pages(new_page=CreateLibraryPage)
 
     def switch_to_add_shelf(self):
-        self.window.switch_pages(
-            new_page=CreatePage,
-            options={"class": Shelf, "relation": "Library"},
-        )
+        pass
+        # self.window.switch_pages(
+        #     new_page=CreatePage,
+        #     options={"class": Shelf, "relation": "Library"},
+        # )
 
     def switch_to_add_book(self):
-        self.window.switch_pages(
-            new_page=CreatePage,
-            options={"class": Book, "relation": "Shelf"},
-        )
+        pass
+        # self.window.switch_pages(
+        #     new_page=CreatePage,
+        #     options={"class": Book, "relation": "Shelf"},
+        # )
 
     def switch_to_search(self):
         self.window.switch_pages(

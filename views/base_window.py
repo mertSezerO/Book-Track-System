@@ -15,9 +15,7 @@ class BaseWindow:
         self.previous_page = None
         self.current_page = LandingPage(self.root, self)
 
-    def switch_pages(self, new_page: Page = None, options: dict = None):
-        if options:
-            self.__options = options
+    def switch_pages(self, new_page: Page = None):
         self.previous_page = self.current_page
         self.current_page.pack_forget()
         if new_page:
@@ -34,11 +32,6 @@ class BaseWindow:
         self.current_page.pack_forget()
         self.current_page = LandingPage(self.root, self)
         self.current_page.pack(fill=tk.BOTH, expand=True)
-
-    def get_options(self):
-        options = deepcopy(self.__options)
-        del self.__options
-        return options
 
     def run(self):
         self.root.mainloop()
