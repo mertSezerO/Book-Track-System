@@ -46,19 +46,6 @@ class LibraryController:
         )
 
     @staticmethod
-    def gather_library_shelves_by_id(library_id: int):
-        return session.query(Shelf).join(Library).filter_by(library_id=library_id).all()
-
-    @staticmethod
-    def gather_library_shelves_by_name(library_name: int):
-        return (
-            session.query(Shelf)
-            .join(Library)
-            .filter_by(library_name=library_name)
-            .all()
-        )
-
-    @staticmethod
     def update_library_name(library_id: int, new_name: str):
         session.query(Library).filter_by(library_id=library_id).update(
             {"name": new_name}

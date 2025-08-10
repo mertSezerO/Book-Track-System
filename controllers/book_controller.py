@@ -5,7 +5,9 @@ from util import session, commit_changes
 class BookController:
 
     @staticmethod
-    def add_book(name: str, author: str, shelf_id: int, keywords: list[str]):
+    def add_book(
+        name: str, author: str, category: str, shelf_id: int, keywords: list[str]
+    ):
         try:
             shelf = session.query(Shelf).get(shelf_id)
             if not shelf:
@@ -24,7 +26,11 @@ class BookController:
                 raise NameError("The book already exist!")
 
             new_book = Book(
-                name=name, author=author, shelf=shelf, keywords=keyword_objs
+                name=name,
+                author=author,
+                category=category,
+                shelf=shelf,
+                keywords=keyword_objs,
             )
             session.add(new_book)
         except:

@@ -20,7 +20,7 @@ class CreateShelfPage(Page):
             self.header_frame,
             text="ADD NEW SHELF",
             fg=Colour.HEADER_TEXT_COLOUR.value,
-            font=("Arial", 24),
+            font=("Arial", 32),
             bg=Colour.HEADER_BG_COLOUR.value,
         )
         self.title_label.pack(pady=10)
@@ -30,7 +30,8 @@ class CreateShelfPage(Page):
 
         dropdown_label = tk.Label(
             self.widget_frame,
-            text="Selected Library",
+            text="Select A Library",
+            font=("Arial", 16),
             bg=Colour.HEADER_BG_COLOUR.value,
             fg=Colour.HEADER_TEXT_COLOUR.value,
         )
@@ -46,12 +47,14 @@ class CreateShelfPage(Page):
             values=self.dropdown_list,
             width=50,
             height=5,
+            style="Custom.TCombobox",
         )
         self.dropdown.pack(pady=10)
 
         entry_label = tk.Label(
             self.widget_frame,
             text="Name",
+            font=("Arial", 16),
             bg=Colour.HEADER_BG_COLOUR.value,
             fg=Colour.HEADER_TEXT_COLOUR.value,
         )
@@ -60,17 +63,23 @@ class CreateShelfPage(Page):
         self.entry = tk.Entry(
             self.widget_frame,
             width=50,
+            font=("Arial", 16),
             bg=Colour.WIDGET_BG_COLOUR.value,
             fg=Colour.BACKGROUND_COLOUR.value,
         )
         self.entry.pack(pady=10)
 
         self.back_button = tk.Button(
-            self, text="Back", command=self.window.back_to_landing_page
+            self,
+            text="Back",
+            font=("Arial", 16),
+            command=self.window.back_to_landing_page,
         )
         self.back_button.pack(pady=10)
 
-        self.save_button = tk.Button(self, text="Save", command=self.save_record)
+        self.save_button = tk.Button(
+            self, text="Save", font=("Arial", 16), command=self.save_record
+        )
         self.save_button.pack(pady=10)
 
     def save_record(self):

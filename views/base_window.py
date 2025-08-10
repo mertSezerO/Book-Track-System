@@ -1,6 +1,9 @@
 import tkinter as tk
+from tkinter import ttk
+
 from copy import deepcopy
 
+from util import Colour
 from .pages.landing_page import LandingPage, Page
 
 
@@ -9,6 +12,17 @@ class BaseWindow:
         self.root = tk.Tk()
         self.root.title(title)
         self.root.geometry(f"{width}x{height}")
+
+        dropdown_style = ttk.Style()
+        dropdown_style.theme_use("clam")
+        dropdown_style.configure(
+            "Custom.TCombobox",
+            fieldbackground=Colour.DROPDOWN_COLOUR.value,
+            background=Colour.HEADER_TEXT_COLOUR.value,
+            foreground=Colour.BACKGROUND_COLOUR.value,
+            font=("Arial", 24),
+        )
+
         self.show_landing_page()
 
     def show_landing_page(self):

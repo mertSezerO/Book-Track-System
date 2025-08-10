@@ -30,6 +30,14 @@ class ShelfController:
         return session.query(Book).join(Book.shelf).filter_by(shelf_id=shelf_id).all()
 
     @staticmethod
+    def gather_library_shelves_by_id(library_id: int):
+        return session.query(Shelf).filter_by(library_id=library_id).all()
+
+    @staticmethod
+    def gather_library_shelves_by_name(library_name: int):
+        return session.query(Shelf).filter_by(library_name=library_name).all()
+
+    @staticmethod
     def find_shelf_books_by_name(shelf_name: str):
         return (
             session.query(Book).join(Book.shelf).filter(Shelf.name == shelf_name).all()

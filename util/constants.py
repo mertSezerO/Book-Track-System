@@ -7,3 +7,4 @@ class Colour(Enum):
     HEADER_TEXT_COLOUR = "#f8e6ab"
     WIDGET_BG_COLOUR = "#ffd64d"
     WIDGET_ACTION_COLOUR = "#ddb224"
+    DROPDOWN_COLOUR = "#ffa785"
