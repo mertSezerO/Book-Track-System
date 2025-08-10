@@ -9,4 +9,5 @@ class Keyword(Base):
     __tablename__ = "keywords"
     keyword_id = Column(Integer, autoincrement=True, primary_key=True)
     name = Column(String, unique=True, index=True, nullable=False)
+
     books = relationship("Book", secondary=book_keywords, back_populates="keywords")

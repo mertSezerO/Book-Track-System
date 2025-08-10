@@ -1,6 +1,8 @@
 from models import Shelf, Book, Keyword
 from util import session, commit_changes
 
+# import pdb
+
 
 class BookController:
 
@@ -9,6 +11,7 @@ class BookController:
         name: str, author: str, category: str, shelf_id: int, keywords: list[str]
     ):
         try:
+            # breakpoint()
             shelf = session.query(Shelf).get(shelf_id)
             if not shelf:
                 raise ReferenceError("Incorrect shelf ID!")
@@ -17,7 +20,7 @@ class BookController:
             for keyword in keywords:
                 keyword_obj = session.query(Keyword).filter_by(name=keyword).first()
                 if not keyword_obj:
-                    keyword_obj = Keyword(keyword)
+                    keyword_obj = Keyword(name=keyword)
                     session.add(keyword_obj)
                 keyword_objs.append(keyword_obj)
 
@@ -25,6 +28,7 @@ class BookController:
             if is_book_exist:
                 raise NameError("The book already exist!")
 
+            # breakpoint()
             new_book = Book(
                 name=name,
                 author=author,
@@ -32,11 +36,13 @@ class BookController:
                 shelf=shelf,
                 keywords=keyword_objs,
             )
+            print("Book Added!")
             session.add(new_book)
         except:
             pass
 
         finally:
+            print("Committed!")
             commit_changes()
 
     @staticmethod

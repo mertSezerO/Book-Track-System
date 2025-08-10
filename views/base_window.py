@@ -17,8 +17,8 @@ class BaseWindow:
         dropdown_style.theme_use("clam")
         dropdown_style.configure(
             "Custom.TCombobox",
-            fieldbackground=Colour.DROPDOWN_COLOUR.value,
-            background=Colour.HEADER_TEXT_COLOUR.value,
+            fieldbackground=Colour.HEADER_TEXT_COLOUR.value,
+            background=Colour.DROPDOWN_COLOUR.value,
             foreground=Colour.BACKGROUND_COLOUR.value,
             font=("Arial", 24),
         )

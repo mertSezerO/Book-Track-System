@@ -23,7 +23,7 @@ class CreateBookPage(Page):
             font=("Arial", 32),
             bg=Colour.HEADER_BG_COLOUR.value,
         )
-        self.title_label.pack(pady=10)
+        self.title_label.pack(pady=5)
 
         self.widget_frame = tk.Frame(self, bg=Colour.BACKGROUND_COLOUR.value)
         self.widget_frame.pack(pady=20)
@@ -35,7 +35,7 @@ class CreateBookPage(Page):
             fg=Colour.HEADER_TEXT_COLOUR.value,
             font=("Arial", 16),
         )
-        library_label.pack(pady=10)
+        library_label.pack(pady=5)
 
         self.libraries = LibraryController.get_libraries()
         self.library_dropdown_list = [library.name for library in self.libraries]
@@ -50,7 +50,7 @@ class CreateBookPage(Page):
             width=100,
             height=10,
         )
-        self.library_dropdown.pack(pady=10)
+        self.library_dropdown.pack(pady=5)
 
         shelf_label = tk.Label(
             self.widget_frame,
@@ -59,7 +59,7 @@ class CreateBookPage(Page):
             fg=Colour.HEADER_TEXT_COLOUR.value,
             font=("Arial", 16),
         )
-        shelf_label.pack(pady=10)
+        shelf_label.pack(pady=5)
 
         self.shelf_dropdown_list = None
 
@@ -73,7 +73,7 @@ class CreateBookPage(Page):
             width=100,
             height=10,
         )
-        self.shelf_dropdown.pack(pady=10)
+        self.shelf_dropdown.pack(pady=5)
 
         name_label = tk.Label(
             self.widget_frame,
@@ -82,7 +82,7 @@ class CreateBookPage(Page):
             fg=Colour.HEADER_TEXT_COLOUR.value,
             font=("Arial", 16),
         )
-        name_label.pack(pady=10)
+        name_label.pack(pady=5)
 
         self.name_entry = tk.Entry(
             self.widget_frame,
@@ -91,7 +91,7 @@ class CreateBookPage(Page):
             fg=Colour.BACKGROUND_COLOUR.value,
             font=("Arial", 16),
         )
-        self.name_entry.pack(pady=10)
+        self.name_entry.pack(pady=5)
 
         author_label = tk.Label(
             self.widget_frame,
@@ -100,7 +100,7 @@ class CreateBookPage(Page):
             fg=Colour.HEADER_TEXT_COLOUR.value,
             font=("Arial", 16),
         )
-        author_label.pack(pady=10)
+        author_label.pack(pady=5)
 
         self.author_entry = tk.Entry(
             self.widget_frame,
@@ -109,7 +109,7 @@ class CreateBookPage(Page):
             fg=Colour.BACKGROUND_COLOUR.value,
             font=("Arial", 16),
         )
-        self.author_entry.pack(pady=10)
+        self.author_entry.pack(pady=5)
 
         category_label = tk.Label(
             self.widget_frame,
@@ -118,7 +118,7 @@ class CreateBookPage(Page):
             fg=Colour.HEADER_TEXT_COLOUR.value,
             font=("Arial", 16),
         )
-        category_label.pack(pady=10)
+        category_label.pack(pady=5)
 
         self.category_entry = tk.Entry(
             self.widget_frame,
@@ -127,7 +127,16 @@ class CreateBookPage(Page):
             fg=Colour.BACKGROUND_COLOUR.value,
             font=("Arial", 16),
         )
-        self.category_entry.pack(pady=10)
+        self.category_entry.pack(pady=5)
+
+        self.keyword_entries = []
+        self.keyword_button = tk.Button(
+            self,
+            text="Add Keyword",
+            command=self.add_keyword,
+            font=("Arial", 16),
+        )
+        self.keyword_button.pack(pady=5)
 
         self.back_button = tk.Button(
             self,
@@ -135,7 +144,7 @@ class CreateBookPage(Page):
             command=self.window.back_to_landing_page,
             font=("Arial", 16),
         )
-        self.back_button.pack(pady=10)
+        self.back_button.pack(pady=5)
 
         self.save_button = tk.Button(
             self,
@@ -143,7 +152,28 @@ class CreateBookPage(Page):
             command=self.save_record,
             font=("Arial", 16),
         )
-        self.save_button.pack(pady=10)
+        self.save_button.pack(pady=5)
+
+    def add_keyword(self):
+        label = tk.Label(
+            self.widget_frame,
+            text="Keyword " + str(len(self.keyword_entries) + 1),
+            bg=Colour.HEADER_BG_COLOUR.value,
+            fg=Colour.HEADER_TEXT_COLOUR.value,
+            font=("Arial", 16),
+        )
+        label.pack(pady=5)
+
+        entry = tk.Entry(
+            self.widget_frame,
+            width=50,
+            bg=Colour.WIDGET_BG_COLOUR.value,
+            fg=Colour.BACKGROUND_COLOUR.value,
+            font=("Arial", 16),
+        )
+        entry.pack(pady=5)
+
+        self.keyword_entries.append(entry)
 
     def filter_shelves(self):
         if self.selected_library.get() == "":
@@ -166,7 +196,7 @@ class CreateBookPage(Page):
         book_name = self.name_entry.get()
         book_author = self.author_entry.get()
         book_category = self.category_entry.get()
-
+        keywords = [keyword.get() for keyword in self.keyword_entries]
         shelf = next(
             (
                 shelf
@@ -183,4 +213,5 @@ class CreateBookPage(Page):
             author=book_author,
             category=book_category,
             shelf_id=shelf.shelf_id,
+            keywords=keywords,
         )
