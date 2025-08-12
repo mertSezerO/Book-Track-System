@@ -40,6 +40,7 @@ class CreateLibraryPage(Page):
             self.widget_frame,
             text="Name",
             bg=Colour.HEADER_BG_COLOUR.value,
+            fg=Colour.HEADER_TEXT_COLOUR.value,
             font=("Arial", 16),
         )
         label.pack(pady=10)

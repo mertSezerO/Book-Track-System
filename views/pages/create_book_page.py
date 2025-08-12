@@ -7,6 +7,7 @@ from util import Colour
 
 
 class CreateBookPage(Page):
+    MAX_LABEL_WIDTH = 16
 
     def __init__(self, parent, window):
         super().__init__(parent, window)
@@ -17,7 +18,7 @@ class CreateBookPage(Page):
 
     def create_widgets(self):
         self.header_frame = tk.Frame(self, bg=Colour.HEADER_BG_COLOUR.value, width=400)
-        self.header_frame.grid(row=0, column=1, pady=5)
+        self.header_frame.grid(row=0, column=1, pady=5, sticky="ew")
 
         self.title_label = tk.Label(
             self.header_frame,
@@ -25,6 +26,7 @@ class CreateBookPage(Page):
             fg=Colour.HEADER_TEXT_COLOUR.value,
             font=("Arial", 32),
             bg=Colour.HEADER_BG_COLOUR.value,
+            width=self.MAX_LABEL_WIDTH,
         )
         self.title_label.pack(pady=5)
 
@@ -42,6 +44,7 @@ class CreateBookPage(Page):
             bg=Colour.HEADER_BG_COLOUR.value,
             fg=Colour.HEADER_TEXT_COLOUR.value,
             font=("Arial", 16),
+            width=self.MAX_LABEL_WIDTH,
         )
         library_label.pack(pady=5)
 
@@ -55,7 +58,7 @@ class CreateBookPage(Page):
             values=self.library_dropdown_list,
             postcommand=self.filter_shelves,
             style="Custom.TCombobox",
-            width=100,
+            width=80,
             height=10,
         )
         self.library_dropdown.pack(pady=5)
@@ -66,6 +69,7 @@ class CreateBookPage(Page):
             bg=Colour.HEADER_BG_COLOUR.value,
             fg=Colour.HEADER_TEXT_COLOUR.value,
             font=("Arial", 16),
+            width=self.MAX_LABEL_WIDTH,
         )
         shelf_label.pack(pady=5)
 
@@ -78,7 +82,7 @@ class CreateBookPage(Page):
             values=self.shelf_dropdown_list,
             postcommand=self.filter_shelves,
             style="Custom.TCombobox",
-            width=100,
+            width=80,
             height=10,
         )
         self.shelf_dropdown.pack(pady=5)
@@ -89,12 +93,13 @@ class CreateBookPage(Page):
             bg=Colour.HEADER_BG_COLOUR.value,
             fg=Colour.HEADER_TEXT_COLOUR.value,
             font=("Arial", 16),
+            width=self.MAX_LABEL_WIDTH,
         )
         name_label.pack(pady=5)
 
         self.name_entry = tk.Entry(
             self.widget_frame,
-            width=50,
+            width=40,
             bg=Colour.WIDGET_BG_COLOUR.value,
             fg=Colour.BACKGROUND_COLOUR.value,
             font=("Arial", 16),
@@ -107,12 +112,13 @@ class CreateBookPage(Page):
             bg=Colour.HEADER_BG_COLOUR.value,
             fg=Colour.HEADER_TEXT_COLOUR.value,
             font=("Arial", 16),
+            width=self.MAX_LABEL_WIDTH,
         )
         author_label.pack(pady=5)
 
         self.author_entry = tk.Entry(
             self.widget_frame,
-            width=50,
+            width=40,
             bg=Colour.WIDGET_BG_COLOUR.value,
             fg=Colour.BACKGROUND_COLOUR.value,
             font=("Arial", 16),
@@ -125,12 +131,13 @@ class CreateBookPage(Page):
             bg=Colour.HEADER_BG_COLOUR.value,
             fg=Colour.HEADER_TEXT_COLOUR.value,
             font=("Arial", 16),
+            width=self.MAX_LABEL_WIDTH,
         )
         category_label.pack(pady=5)
 
         self.category_entry = tk.Entry(
             self.widget_frame,
-            width=50,
+            width=40,
             bg=Colour.WIDGET_BG_COLOUR.value,
             fg=Colour.BACKGROUND_COLOUR.value,
             font=("Arial", 16),
@@ -143,18 +150,24 @@ class CreateBookPage(Page):
             text="Add Keyword",
             command=self.add_keyword,
             font=("Arial", 16),
+            bg=Colour.HEADER_TEXT_COLOUR.value,
+            fg=Colour.BACKGROUND_COLOUR.value,
         )
         self.back_button = tk.Button(
             self.button_frame,
             text="Back",
             command=self.window.back_to_landing_page,
             font=("Arial", 16),
+            bg=Colour.HEADER_TEXT_COLOUR.value,
+            fg=Colour.BACKGROUND_COLOUR.value,
         )
         self.save_button = tk.Button(
             self.button_frame,
             text="Save",
             command=self.save_record,
             font=("Arial", 16),
+            bg=Colour.HEADER_TEXT_COLOUR.value,
+            fg=Colour.BACKGROUND_COLOUR.value,
         )
         self.button_frame.grid_columnconfigure(0, weight=1)
         self.button_frame.grid_columnconfigure(1, weight=1)
@@ -170,6 +183,7 @@ class CreateBookPage(Page):
             bg=Colour.HEADER_BG_COLOUR.value,
             fg=Colour.HEADER_TEXT_COLOUR.value,
             font=("Arial", 16),
+            width=self.MAX_LABEL_WIDTH,
         )
         label.pack(pady=5)
 
@@ -178,6 +192,7 @@ class CreateBookPage(Page):
             bg=Colour.WIDGET_BG_COLOUR.value,
             fg=Colour.BACKGROUND_COLOUR.value,
             font=("Arial", 16),
+            width=40,
         )
         entry.pack(pady=5)
 
