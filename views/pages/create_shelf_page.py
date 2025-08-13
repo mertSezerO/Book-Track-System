@@ -68,19 +68,23 @@ class CreateShelfPage(Page):
             fg=Colour.BACKGROUND_COLOUR.value,
         )
         self.entry.pack(pady=10)
+        
+        self.save_button = tk.Button(
+            self, text="Save", font=("Arial", 16), command=self.save_record,bg=Colour.ROUTE_BUTTON_COLOUR.value,
+            fg=Colour.BACKGROUND_COLOUR.value,
+        )
+        self.save_button.pack(pady=10)
 
         self.back_button = tk.Button(
             self,
             text="Back",
             font=("Arial", 16),
             command=self.window.back_to_landing_page,
+            bg=Colour.ROUTE_BUTTON_COLOUR.value,
+            fg=Colour.BACKGROUND_COLOUR.value,
         )
         self.back_button.pack(pady=10)
 
-        self.save_button = tk.Button(
-            self, text="Save", font=("Arial", 16), command=self.save_record
-        )
-        self.save_button.pack(pady=10)
 
     def save_record(self):
         shelf_name = self.entry.get()

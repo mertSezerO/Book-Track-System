@@ -28,14 +28,6 @@ class CreateLibraryPage(Page):
         self.widget_frame = tk.Frame(self, bg=Colour.BACKGROUND_COLOUR.value)
         self.widget_frame.pack(pady=100)
 
-        self.back_button = tk.Button(
-            self,
-            text="Back",
-            font=("Arial", 16),
-            command=self.window.back_to_landing_page,
-        )
-        self.back_button.pack(pady=10)
-
         label = tk.Label(
             self.widget_frame,
             text="Name",
@@ -55,9 +47,19 @@ class CreateLibraryPage(Page):
         self.entry.pack(pady=10)
 
         self.save_button = tk.Button(
-            self, text="Save", font=("Arial", 16), command=self.save_record
+            self, text="Save", font=("Arial", 16), command=self.save_record,bg=Colour.ROUTE_BUTTON_COLOUR.value,
+            fg=Colour.BACKGROUND_COLOUR.value,
         )
         self.save_button.pack(pady=10)
+
+        self.back_button = tk.Button(
+            self,
+            text="Back",
+            font=("Arial", 16),
+            command=self.window.back_to_landing_page,bg=Colour.ROUTE_BUTTON_COLOUR.value,
+            fg=Colour.BACKGROUND_COLOUR.value,
+        )
+        self.back_button.pack(pady=10)
 
     def save_record(self):
         name = self.entry.get()

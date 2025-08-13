@@ -94,11 +94,7 @@ class LandingPage(Page):
         self.window.switch_pages(new_page=CreateShelfPage)
 
     def switch_to_add_book(self):
-        self.window.switch_pages(
-            new_page=CreateBookPage,
-        )
+        self.window.switch_pages(new_page=CreateBookPage)
 
     def switch_to_search(self):
-        self.window.switch_pages(
-            new_page=SearchPage,
-        )
+        self.window.switch_pages(new_page=SearchPage)
