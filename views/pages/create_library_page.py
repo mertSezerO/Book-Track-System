@@ -43,6 +43,8 @@ class CreateLibraryPage(Page):
             font=("Arial", 16),
             bg=Colour.WIDGET_BG_COLOUR.value,
             fg=Colour.BACKGROUND_COLOUR.value,
+            borderwidth=2,
+            relief="sunken",
         )
         self.entry.pack(pady=10)
 

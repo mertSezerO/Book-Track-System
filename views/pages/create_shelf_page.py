@@ -45,7 +45,7 @@ class CreateShelfPage(Page):
             self.widget_frame,
             textvariable=self.dropdown_selected,
             values=self.dropdown_list,
-            width=50,
+            width=80,
             height=5,
             style="Custom.TCombobox",
         )
@@ -66,6 +66,8 @@ class CreateShelfPage(Page):
             font=("Arial", 16),
             bg=Colour.WIDGET_BG_COLOUR.value,
             fg=Colour.BACKGROUND_COLOUR.value,
+            borderwidth=2,
+            relief="sunken",
         )
         self.entry.pack(pady=10)
         

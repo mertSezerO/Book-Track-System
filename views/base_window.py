@@ -23,6 +23,23 @@ class BaseWindow:
             font=("Arial", 24),
         )
 
+        table_style = ttk.Style()
+        table_style.theme_use("clam")
+        table_style.configure(
+            "Custom.Treeview",
+            background=Colour.DROPDOWN_COLOUR.value,
+            foreground=Colour.BACKGROUND_COLOUR.value,
+            fieldbackground=Colour.HEADER_TEXT_COLOUR.value ,
+            font=("Arial", 14),
+            rowheight=40
+        )
+        table_style.configure(
+            "Custom.Treeview.Heading",
+            font=("Arial", 18, "bold"),
+            background=Colour.ACTION_BUTTON_COLOUR.value,
+            foreground=Colour.HEADER_TEXT_COLOUR.value,
+        )
+
         self.show_landing_page()
 
     def show_landing_page(self):

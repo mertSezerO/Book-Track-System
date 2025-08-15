@@ -107,6 +107,8 @@ class CreateBookPage(Page):
             bg=Colour.WIDGET_BG_COLOUR.value,
             fg=Colour.BACKGROUND_COLOUR.value,
             font=("Arial", self.FONT_SIZE),
+            borderwidth=2,
+            relief="sunken",
         )
         self.name_entry.pack(pady=5)
 
@@ -126,6 +128,8 @@ class CreateBookPage(Page):
             bg=Colour.WIDGET_BG_COLOUR.value,
             fg=Colour.BACKGROUND_COLOUR.value,
             font=("Arial", self.FONT_SIZE),
+            borderwidth=2,
+            relief="sunken",
         )
         self.author_entry.pack(pady=5)
 
@@ -145,6 +149,8 @@ class CreateBookPage(Page):
             bg=Colour.WIDGET_BG_COLOUR.value,
             fg=Colour.BACKGROUND_COLOUR.value,
             font=("Arial", self.FONT_SIZE),
+            borderwidth=2,
+            relief="sunken",
         )
         self.category_entry.pack(pady=5)
 
@@ -197,6 +203,8 @@ class CreateBookPage(Page):
             fg=Colour.BACKGROUND_COLOUR.value,
             font=("Arial", self.FONT_SIZE),
             width=self.INPUT_WIDTH,
+            borderwidth=2,
+            relief="sunken",
         )
         entry.pack(pady=5)
 

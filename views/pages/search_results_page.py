@@ -40,18 +40,20 @@ class SearchResultsPage(Page):
         )
         self.title_label.pack(pady=5)
 
-        self.result_frame = tk.Frame(self, bg=Colour.HEADER_TEXT_COLOUR.value, width=600)
+        self.result_frame = tk.Frame(self, bg=Colour.HEADER_TEXT_COLOUR.value, width=1000, height=1000)
         self.result_frame.grid(row=1, column=1, pady=20, sticky="ew")
 
-        self.tree = ttk.Treeview(self.result_frame, columns=self.table_data.columns, show="headings")
+        self.tree = ttk.Treeview(self.result_frame, columns=self.table_data.columns, show="headings", style="Custom.Treeview")
 
         for col in self.table_data.columns:
             self.tree.heading(col, text=col)
-            self.tree.column(col, anchor="center", width=150)
+            self.tree.column(col, anchor="center", width=200)
 
-        for row in self.table_data.get_data():
-            self.tree.insert("", tk.END, values=row)
+        for i, row in enumerate(self.table_data.get_data()):
+            tag = "evenrow" if i % 2 == 0 else "oddrow"
+            self.tree.insert("", tk.END, values=row, tags=(tag,))
 
+        self.tree.tag_configure("oddrow", background=Colour.WIDGET_BG_COLOUR.value)
         self.tree.pack(fill=tk.BOTH, expand=True)
 
         self.back_button = tk.Button(
