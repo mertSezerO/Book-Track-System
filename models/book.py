@@ -15,3 +15,4 @@ class Book(Base):
     shelf_id = Column(Integer, ForeignKey("shelves.shelf_id"))
     shelf = relationship("Shelf", back_populates="books")
     keywords = relationship("Keyword", secondary=book_keywords, back_populates="books")
+    notes = relationship("Note", back_populates="book")

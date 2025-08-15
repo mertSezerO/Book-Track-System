@@ -1,5 +1,7 @@
-from models import Shelf, Book, Keyword
-from util import session, commit_changes
+from sqlalchemy import and_
+
+from models import Shelf, Book, Keyword, Library
+from util import session, commit_changes, TableData
 
 
 class BookController:
@@ -61,3 +63,41 @@ class BookController:
     def update_book_name(book_id: int, new_name: str):
         session.query(Book).filter_by(book_id=book_id).update({"name": new_name})
         commit_changes()
+
+    @staticmethod
+    def check_column_name(name: str):
+        columns = Book.__table__.columns
+        for col in columns:
+            if col.name == name:
+                return True
+            
+        return False
+
+    @staticmethod
+    def search_books_by_criteria(criteria_dict: dict = None):
+        if criteria_dict:
+            filters = []
+            for field, value in criteria_dict.items():
+                column = getattr(Book, field, None)
+                if column is not None:
+                    filters.append(column.ilike(f"%{value}%"))
+
+            if not filters:
+                return []
+            
+            results = session.query(Book).filter(and_(*filters)).join(Shelf).join(Library).all() 
+        
+        else:
+            results = session.query(Book).join(Shelf).join(Library).all()
+        return results
+    
+    @staticmethod
+    def convert_to_table_data(data: list[Book]) -> TableData:
+        columns = ["Book ID", "Category", "Book Name", "Author", "Library Name", "Shelf Name"]
+        data_list = []
+
+        for instance in data:
+            data_tuple = (instance.book_id, instance.category, instance.name, instance.author, instance.shelf.library.name, instance.shelf.name)
+            data_list.append(data_tuple)
+        
+        return TableData(columns=columns, data_list=data_list)
