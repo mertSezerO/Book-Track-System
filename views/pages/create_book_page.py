@@ -8,8 +8,8 @@ from util import Colour
 
 class CreateBookPage(Page):
     LABEL_WIDTH = 16
-    INPUT_WIDTH = 40
-    FONT_SIZE = 16
+    INPUT_WIDTH = 50
+    FONT_SIZE = 14
     HEADER_FONT_SIZE = 32
 
     def __init__(self, parent, window):
@@ -22,7 +22,7 @@ class CreateBookPage(Page):
 
     def create_widgets(self):
         self.header_frame = tk.Frame(self, bg=Colour.HEADER_BG_COLOUR.value, width=400)
-        self.header_frame.grid(row=0, column=1, pady=5, sticky="ew")
+        self.header_frame.grid(row=0, column=1, pady=20, sticky="ew")
 
         self.title_label = tk.Label(
             self.header_frame,
@@ -157,14 +157,6 @@ class CreateBookPage(Page):
             bg=Colour.ACTION_BUTTON_COLOUR.value,
             fg=Colour.BACKGROUND_COLOUR.value,
         )
-        self.back_button = tk.Button(
-            self.button_frame,
-            text="Back",
-            command=self.window.back_to_landing_page,
-            font=("Arial", self.FONT_SIZE),
-            bg=Colour.ROUTE_BUTTON_COLOUR.value,
-            fg=Colour.BACKGROUND_COLOUR.value,
-        )
         self.save_button = tk.Button(
             self.button_frame,
             text="Save",
@@ -173,12 +165,20 @@ class CreateBookPage(Page):
             bg=Colour.ROUTE_BUTTON_COLOUR.value,
             fg=Colour.BACKGROUND_COLOUR.value,
         )
+        self.back_button = tk.Button(
+            self.button_frame,
+            text="Back",
+            command=self.window.back_to_landing_page,
+            font=("Arial", self.FONT_SIZE),
+            bg=Colour.ROUTE_BUTTON_COLOUR.value,
+            fg=Colour.BACKGROUND_COLOUR.value,
+        )
         self.button_frame.grid_columnconfigure(0, weight=1)
         self.button_frame.grid_columnconfigure(1, weight=1)
 
         self.keyword_button.grid(row=0, column=0, columnspan=2, sticky="ew", pady=5)
-        self.back_button.grid(row=1, column=0, sticky="ew", padx=5, pady=5)
-        self.save_button.grid(row=1, column=1, sticky="ew", padx=5, pady=5)
+        self.save_button.grid(row=1, column=0, sticky="ew", padx=5, pady=5)
+        self.back_button.grid(row=1, column=1, sticky="ew", padx=5, pady=5)
 
     def add_keyword(self):
         label = tk.Label(

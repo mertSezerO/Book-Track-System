@@ -29,11 +29,14 @@ class BaseWindow:
         self.previous_page = None
         self.current_page = LandingPage(self.root, self)
 
-    def switch_pages(self, new_page: Page = None):
+    def switch_pages(self, new_page: Page = None, page_params=None):
         self.previous_page = self.current_page
         self.current_page.pack_forget()
         if new_page:
-            self.current_page = new_page(self.root, self)
+            if page_params:
+                self.current_page = new_page(self.root, self, page_params=page_params)
+            else:
+                self.current_page = new_page(self.root, self)
         else:
             self.current_page = LandingPage(self.root, self)
         self.current_page.pack(fill=tk.BOTH, expand=True)

@@ -2,13 +2,15 @@ import tkinter as tk
 
 from .page import Page
 from util import Colour
-
+from controllers import BookController
+from .search_results_page import SearchResultsPage
 
 class SearchPage(Page):
     LABEL_WIDTH = 16
     INPUT_WIDTH = 50
     FONT_SIZE = 16
     HEADER_FONT_SIZE = 32
+
 
     def __init__(self, parent, window):
         super().__init__(parent, window)
@@ -80,4 +82,19 @@ class SearchPage(Page):
         self.back_button.grid(row=2,column=1,pady=10)
 
     def search_by_criteria(self):
-        pass
+        search_input = self.search_entry.get()
+        if search_input:
+            criterias = search_input.split(" ")
+            query = {}
+            for criteria in criterias:
+                key,value = criteria.split(":")
+                if not BookController.check_column_name(key):
+                    raise Exception("{} not a valid criteria!".format(key))
+                query[key] = value
+    
+            results = BookController.search_books_by_criteria(query)
+        
+        else:
+            results = BookController.search_books_by_criteria()
+        self.window.switch_pages(new_page=SearchResultsPage, page_params=results)
+        
