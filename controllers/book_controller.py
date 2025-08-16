@@ -94,11 +94,11 @@ class BookController:
     
     @staticmethod
     def __convert_to_table_data(data: list[Book]) -> TableData:
-        columns = ["Book ID", "Category", "Book Name", "Author", "Library Name", "Shelf Name"]
+        columns = ["Book ID", "Category", "Book Name", "Author", "Translator", "Library Name", "Shelf Name"]
         data_list = []
 
         for instance in data:
-            data_tuple = (instance.book_id, instance.category, instance.name, instance.author, instance.shelf.library.name, instance.shelf.name)
+            data_tuple = (instance.book_id, instance.category, instance.name, instance.author, instance.translator, instance.shelf.library.name, instance.shelf.name)
             data_list.append(data_tuple)
         
         return TableData(columns=columns, data_list=data_list)

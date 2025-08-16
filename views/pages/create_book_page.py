@@ -37,10 +37,12 @@ class CreateBookPage(Page):
         self.widget_frame = tk.Frame(self, bg=Colour.BACKGROUND_COLOUR.value)
         self.keyword_frame = tk.Frame(self, bg=Colour.BACKGROUND_COLOUR.value)
         self.button_frame = tk.Frame(self, bg=Colour.BACKGROUND_COLOUR.value, width=300)
+        self.keyword_button_frame = tk.Frame(self, bg=Colour.BACKGROUND_COLOUR.value)
 
         self.widget_frame.grid(row=1, column=1, pady=10)
         self.keyword_frame.grid(row=1, column=2, pady=10)
         self.button_frame.grid(row=2, column=1, pady=10)
+        self.keyword_button_frame.grid(row=2, column=2, pady=10)
 
         library_label = tk.Label(
             self.widget_frame,
@@ -180,7 +182,8 @@ class CreateBookPage(Page):
         self.entries.append(self.translator_entry)
 
         self.keyword_entries = []
-        self.keyword_button = tk.Button(
+        self.keyword_labels = []
+        self.keyword_add_button = tk.Button(
             self.button_frame,
             text="Add Keyword",
             command=self.add_keyword,
@@ -207,11 +210,21 @@ class CreateBookPage(Page):
         self.button_frame.grid_columnconfigure(0, weight=1)
         self.button_frame.grid_columnconfigure(1, weight=1)
 
-        self.keyword_button.grid(row=0, column=0, columnspan=2, sticky="ew", pady=5)
+        self.keyword_delete_button = tk.Button(
+            self.keyword_button_frame,
+            text="Remove Keyword",
+            command=self.remove_keyword,
+            font=("Arial", self.FONT_SIZE),
+            bg=Colour.ROUTE_BUTTON_COLOUR.value,
+            fg=Colour.BACKGROUND_COLOUR.value,
+        )
+
+        self.keyword_add_button.grid(row=0, column=0, columnspan=2, sticky="ew", pady=5)
         self.save_button.grid(row=1, column=0, sticky="ew", padx=5, pady=5)
         self.back_button.grid(row=1, column=1, sticky="ew", padx=5, pady=5)
 
     def add_keyword(self):
+        self.keyword_frame.grid(row=1, column=2, pady=10)
         label = tk.Label(
             self.keyword_frame,
             text="Keyword " + str(len(self.keyword_entries) + 1),
@@ -234,6 +247,21 @@ class CreateBookPage(Page):
         entry.pack(pady=5)
 
         self.keyword_entries.append(entry)
+        self.keyword_labels.append(label)
+        self.keyword_button_frame.grid(row=2, column=2, pady=10)
+        self.keyword_delete_button.pack(pady=5)
+    
+    def remove_keyword(self):
+        self.keyword_entries[len(self.keyword_entries) - 1].destroy()
+        self.keyword_labels[len(self.keyword_labels) - 1].destroy()
+
+        self.keyword_entries.pop(len(self.keyword_entries) - 1)
+        self.keyword_labels.pop(len(self.keyword_entries) - 1)
+
+        if len(self.keyword_entries) == 0:
+            self.keyword_delete_button.pack_forget()
+            self.keyword_button_frame.grid_forget()
+            self.keyword_frame.grid_forget()
 
     def filter_shelves(self):
         if self.selected_library.get() == "":
