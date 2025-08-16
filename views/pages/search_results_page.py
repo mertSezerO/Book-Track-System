@@ -17,7 +17,8 @@ class SearchResultsPage(Page):
         
         self.search_criteria = kwargs["search_input"]
         self.search_by_criteria()
-        
+        self.order_column = "Book ID"
+
         self.grid_columnconfigure(0, weight=2)
         self.grid_columnconfigure(1, weight=3)
         self.grid_columnconfigure(2, weight=2)
@@ -48,10 +49,10 @@ class SearchResultsPage(Page):
         self.tree = ttk.Treeview(self.result_frame, columns=self.table_data.columns, show="headings", style="Custom.Treeview")
 
         for col in self.table_data.columns:
-            self.tree.heading(col, text=col)
+            self.tree.heading(col, text=col, command=lambda column_name=col: self.order_by_column(column_name))
             self.tree.column(col, anchor="center", width=200)
 
-        for i, row in enumerate(self.table_data.get_data()):
+        for i, row in enumerate(self.tree_data):
             tag = "evenrow" if i % 2 == 0 else "oddrow"
             self.tree.insert("", tk.END, values=row, tags=(tag,))
 
@@ -93,3 +94,20 @@ class SearchResultsPage(Page):
             results = BookController.search_books_by_criteria()
 
         self.table_data = results
+        self.tree_data = results.get_data()
+
+    def order_by_column(self, column_name: str):
+        if self.order_column == column_name:
+            return
+        
+        self.order_column = column_name
+        self.tree_data = self.table_data.sort_by_column(column_name)
+        self.reform_table()
+
+    def reform_table(self):
+        for item in self.tree.get_children():
+            self.tree.delete(item)
+
+        for i, row in enumerate(self.tree_data):
+            tag = "evenrow" if i % 2 == 0 else "oddrow"
+            self.tree.insert("", tk.END, values=row, tags=(tag,))

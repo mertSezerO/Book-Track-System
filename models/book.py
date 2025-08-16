@@ -11,6 +11,7 @@ class Book(Base):
     name = Column(String, unique=True, index=True, nullable=False)
     author = Column(String, index=True, nullable=False)
     category = Column(String, index=True, nullable=False)
+    translator = Column(String, index=False, nullable=True)
 
     shelf_id = Column(Integer, ForeignKey("shelves.shelf_id"))
     shelf = relationship("Shelf", back_populates="books")

@@ -49,7 +49,7 @@ class BaseWindow:
         scroll_style.configure(
             "Vertical.TScrollbar",
             gripcount=0,
-            troughcolor=Colour.HEADER_BG_COLOUR.value,
+            troughcolor=Colour.BACKGROUND_COLOUR.value,
             background=Colour.ACTION_BUTTON_COLOUR.value,  
             darkcolor=Colour.ROUTE_BUTTON_COLOUR.value,
             lightcolor=Colour.ROUTE_BUTTON_COLOUR.value,
@@ -65,7 +65,7 @@ class BaseWindow:
         self.current_page.pack_forget()
         if new_page:
             if kwargs:
-                self.current_page = new_page(self.root, self, kwargs)
+                self.current_page = new_page(self.root, self, **kwargs)
             else:
                 self.current_page = new_page(self.root, self)
         else:

@@ -91,6 +91,7 @@ class CreateBookPage(Page):
         )
         self.shelf_dropdown.pack(pady=5)
 
+        self.entries = []
         name_label = tk.Label(
             self.widget_frame,
             text="Name",
@@ -111,6 +112,7 @@ class CreateBookPage(Page):
             relief="sunken",
         )
         self.name_entry.pack(pady=5)
+        self.entries.append(self.name_entry)
 
         author_label = tk.Label(
             self.widget_frame,
@@ -132,6 +134,7 @@ class CreateBookPage(Page):
             relief="sunken",
         )
         self.author_entry.pack(pady=5)
+        self.entries.append(self.author_entry)
 
         category_label = tk.Label(
             self.widget_frame,
@@ -153,6 +156,28 @@ class CreateBookPage(Page):
             relief="sunken",
         )
         self.category_entry.pack(pady=5)
+        self.entries.append(self.category_entry)
+
+        translator_label = tk.Label(
+            self.widget_frame,
+            text="Translator",
+            bg=Colour.HEADER_BG_COLOUR.value,
+            fg=Colour.HEADER_TEXT_COLOUR.value,
+            font=("Arial", self.FONT_SIZE),
+            width=self.LABEL_WIDTH,
+        )
+        translator_label.pack(pady=5)
+        self.translator_entry = tk.Entry(
+            self.widget_frame,
+            width=self.INPUT_WIDTH,
+            bg=Colour.WIDGET_BG_COLOUR.value,
+            fg=Colour.BACKGROUND_COLOUR.value,
+            font=("Arial", self.FONT_SIZE),
+            borderwidth=2,
+            relief="sunken",
+        )
+        self.translator_entry.pack(pady=5)
+        self.entries.append(self.translator_entry)
 
         self.keyword_entries = []
         self.keyword_button = tk.Button(
@@ -231,6 +256,8 @@ class CreateBookPage(Page):
         book_name = self.name_entry.get()
         book_author = self.author_entry.get()
         book_category = self.category_entry.get()
+        translator = self.translator_entry.get()
+
         keywords = [keyword.get() for keyword in self.keyword_entries]
         shelf = next(
             (
@@ -247,6 +274,19 @@ class CreateBookPage(Page):
             name=book_name,
             author=book_author,
             category=book_category,
+            translator=translator,
             shelf_id=shelf.shelf_id,
             keywords=keywords,
         )
+
+        self.clear_widgets()
+
+    def clear_widgets(self):
+        for entry in self.entries:
+            entry.delete(0, tk.END)
+        
+        for entry in self.keyword_entries:
+            entry.delete(0, tk.END)
+
+        self.shelf_dropdown.set("")
+        self.library_dropdown.set("")

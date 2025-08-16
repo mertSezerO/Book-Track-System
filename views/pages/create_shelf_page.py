@@ -98,3 +98,8 @@ class CreateShelfPage(Page):
             raise ReferenceError("Selected library is not exists!")
 
         ShelfController.create_shelf(name=shelf_name, library_id=library.library_id)
+        self.clear_widgets()
+
+    def clear_widgets(self):
+        self.entry.delete(0, tk.END)
+        self.dropdown.set("")

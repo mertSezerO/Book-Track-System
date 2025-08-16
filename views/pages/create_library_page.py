@@ -66,3 +66,7 @@ class CreateLibraryPage(Page):
     def save_record(self):
         name = self.entry.get()
         LibraryController.create_library(name)
+        self.clear_widgets()
+
+    def clear_widgets(self):
+        self.entry.delete(0, tk.END)

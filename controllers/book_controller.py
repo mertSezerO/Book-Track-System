@@ -8,7 +8,7 @@ class BookController:
 
     @staticmethod
     def add_book(
-        name: str, author: str, category: str, shelf_id: int, keywords: list[str]
+        name: str, author: str, category: str, translator: str, shelf_id: int, keywords: list[str]
     ):
         try:
             shelf = session.query(Shelf).get(shelf_id)
@@ -31,6 +31,7 @@ class BookController:
                 name=name,
                 author=author,
                 category=category,
+                translator=translator,
                 shelf=shelf,
                 keywords=keyword_objs,
             )
