@@ -65,7 +65,7 @@ class SearchPage(Page):
         self.search_button = tk.Button(
             self.search_frame,
             text="Submit",
-            command=self.search_by_criteria,
+            command=self.show_results,
             font=("Arial", self.FONT_SIZE),
             bg=Colour.ACTION_BUTTON_COLOUR.value,
             fg=Colour.HEADER_TEXT_COLOUR.value,
@@ -81,20 +81,7 @@ class SearchPage(Page):
         )
         self.back_button.grid(row=2,column=1,pady=10)
 
-    def search_by_criteria(self):
+    def show_results(self):
         search_input = self.search_entry.get()
-        if search_input:
-            criterias = search_input.split(" ")
-            query = {}
-            for criteria in criterias:
-                key,value = criteria.split(":")
-                if not BookController.check_column_name(key):
-                    raise Exception("{} not a valid criteria!".format(key))
-                query[key] = value
-    
-            results = BookController.search_books_by_criteria(query)
-        
-        else:
-            results = BookController.search_books_by_criteria()
-        self.window.switch_pages(new_page=SearchResultsPage, page_params=results)
+        self.window.switch_pages(new_page=SearchResultsPage, search_input=search_input)
         

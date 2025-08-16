@@ -13,3 +13,7 @@ class TableData:
             table_instances.append(data)
 
         return table_instances
+    
+    def sort_by_column(self, column_name: str):
+        field_index = self.columns.index(column_name)
+        

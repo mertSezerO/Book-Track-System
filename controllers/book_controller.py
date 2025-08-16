@@ -89,10 +89,10 @@ class BookController:
         
         else:
             results = session.query(Book).join(Shelf).join(Library).all()
-        return results
+        return BookController.__convert_to_table_data(results)
     
     @staticmethod
-    def convert_to_table_data(data: list[Book]) -> TableData:
+    def __convert_to_table_data(data: list[Book]) -> TableData:
         columns = ["Book ID", "Category", "Book Name", "Author", "Library Name", "Shelf Name"]
         data_list = []
 

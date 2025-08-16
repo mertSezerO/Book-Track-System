@@ -13,6 +13,10 @@ class BaseWindow:
         self.root.title(title)
         self.root.geometry(f"{width}x{height}")
 
+        self.set_styles()
+        self.show_landing_page()
+
+    def set_styles(self):
         dropdown_style = ttk.Style()
         dropdown_style.theme_use("clam")
         dropdown_style.configure(
@@ -40,18 +44,28 @@ class BaseWindow:
             foreground=Colour.HEADER_TEXT_COLOUR.value,
         )
 
-        self.show_landing_page()
+        scroll_style = ttk.Style()
+        scroll_style.theme_use("clam")
+        scroll_style.configure(
+            "Vertical.TScrollbar",
+            gripcount=0,
+            troughcolor=Colour.HEADER_BG_COLOUR.value,
+            background=Colour.ACTION_BUTTON_COLOUR.value,  
+            darkcolor=Colour.ROUTE_BUTTON_COLOUR.value,
+            lightcolor=Colour.ROUTE_BUTTON_COLOUR.value,
+            arrowcolor=Colour.HEADER_TEXT_COLOUR.value
+        )
 
     def show_landing_page(self):
         self.previous_page = None
         self.current_page = LandingPage(self.root, self)
 
-    def switch_pages(self, new_page: Page = None, page_params=None):
+    def switch_pages(self, new_page: Page = None, **kwargs):
         self.previous_page = self.current_page
         self.current_page.pack_forget()
         if new_page:
-            if page_params:
-                self.current_page = new_page(self.root, self, page_params=page_params)
+            if kwargs:
+                self.current_page = new_page(self.root, self, kwargs)
             else:
                 self.current_page = new_page(self.root, self)
         else:

@@ -12,10 +12,12 @@ class SearchResultsPage(Page):
     HEADER_FONT_SIZE = 32
 
 
-    def __init__(self, parent, window, page_params: list):
+    def __init__(self, parent, window, **kwargs):
         super().__init__(parent, window)
-        self.table_data = BookController.convert_to_table_data(page_params)
-
+        
+        self.search_criteria = kwargs["search_input"]
+        self.search_by_criteria()
+        
         self.grid_columnconfigure(0, weight=2)
         self.grid_columnconfigure(1, weight=3)
         self.grid_columnconfigure(2, weight=2)
@@ -54,7 +56,16 @@ class SearchResultsPage(Page):
             self.tree.insert("", tk.END, values=row, tags=(tag,))
 
         self.tree.tag_configure("oddrow", background=Colour.WIDGET_BG_COLOUR.value)
-        self.tree.pack(fill=tk.BOTH, expand=True)
+        vsb = ttk.Scrollbar(
+            self.result_frame,
+            orient="vertical",
+            command=self.tree.yview,
+            style="Vertical.TScrollbar"
+        )
+        self.tree.configure(yscrollcommand=vsb.set)
+
+        self.tree.pack(side="left", fill=tk.BOTH, expand=True)
+        vsb.pack(side="right", fill="y")
 
         self.back_button = tk.Button(
             self,
@@ -66,3 +77,19 @@ class SearchResultsPage(Page):
         self.back_button.grid(row=2,column=1,pady=10)
 
         
+    def search_by_criteria(self):
+        if self.search_criteria:
+            criterias = self.search_criteria.split(" ")
+            query = {}
+            for criteria in criterias:
+                key,value = criteria.split(":")
+                if not BookController.check_column_name(key):
+                    raise Exception("{} not a valid criteria!".format(key))
+                query[key] = value
+    
+            results = BookController.search_books_by_criteria(query)
+        
+        else:
+            results = BookController.search_books_by_criteria()
+
+        self.table_data = results
