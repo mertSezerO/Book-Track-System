@@ -74,7 +74,7 @@ class BookController:
         return False
 
     @staticmethod
-    def search_books_by_criteria(criteria_dict: dict = None):
+    def search_books_by_criteria(criteria_dict: dict = None) -> TableData:
         if criteria_dict:
             filters = []
             for field, value in criteria_dict.items():

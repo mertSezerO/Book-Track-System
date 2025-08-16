@@ -16,4 +16,5 @@ class TableData:
     
     def sort_by_column(self, column_name: str):
         field_index = self.columns.index(column_name)
-        
+        sorted_data = sorted(self.get_data(), key=lambda row: row[field_index])
+        return sorted_data
