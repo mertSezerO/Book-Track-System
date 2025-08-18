@@ -5,7 +5,7 @@ from .create_library_page import CreateLibraryPage
 from .create_shelf_page import CreateShelfPage
 from .create_book_page import CreateBookPage
 from .search_page import SearchPage
-from util import Colour
+from util.common import Colour
 from models import Library, Shelf, Book
 
 

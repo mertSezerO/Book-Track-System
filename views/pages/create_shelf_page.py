@@ -3,7 +3,7 @@ from tkinter import ttk
 
 from .page import Page
 from controllers import LibraryController, ShelfController
-from util import Colour
+from util.common import Colour
 
 
 class CreateShelfPage(Page):

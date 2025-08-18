@@ -1,6 +1,6 @@
 import tkinter as tk
 
-from util import Colour
+from util.common import Colour
 
 
 class Page(tk.Frame):

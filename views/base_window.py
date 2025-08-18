@@ -3,7 +3,7 @@ from tkinter import ttk
 
 from copy import deepcopy
 
-from util import Colour
+from util.common import Colour
 from .pages.landing_page import LandingPage, Page
 
 

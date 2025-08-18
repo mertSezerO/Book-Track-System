@@ -1,7 +1,8 @@
 from sqlalchemy import and_
 
 from models import Shelf, Book, Keyword, Library
-from util import session, commit_changes, TableData
+from util import session, commit_changes
+from util.common import TableData
 
 
 class BookController:

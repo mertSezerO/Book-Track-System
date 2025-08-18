@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 
 from .page import Page
-from util import Colour
+from util.common import Colour
 from controllers import BookController
 
 class SearchResultsPage(Page):
