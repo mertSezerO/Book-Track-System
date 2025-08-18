@@ -3,7 +3,7 @@ from tkinter import ttk
 
 from .page import Page
 from controllers import LibraryController, ShelfController, BookController
-from util.common import Colour
+from util.common import Colour, LogData
 
 
 class CreateBookPage(Page):
@@ -223,6 +223,13 @@ class CreateBookPage(Page):
         self.save_button.grid(row=1, column=0, sticky="ew", padx=5, pady=5)
         self.back_button.grid(row=1, column=1, sticky="ew", padx=5, pady=5)
 
+        self.window.logger.log(LogData(
+            message="Widgets created for page: {}",
+            source="view",
+            level="debug",
+            args=("CreateBook", )
+        ))
+
     def add_keyword(self):
         self.keyword_frame.grid(row=1, column=2, pady=10)
         label = tk.Label(
@@ -250,6 +257,13 @@ class CreateBookPage(Page):
         self.keyword_labels.append(label)
         self.keyword_button_frame.grid(row=2, column=2, pady=10)
         self.keyword_delete_button.pack(pady=5)
+
+        self.window.logger.log(LogData(
+            message="Keyword added for page: {}",
+            source="view",
+            level="debug",
+            args=("CreateBook", )
+        ))
     
     def remove_keyword(self):
         self.keyword_entries[len(self.keyword_entries) - 1].destroy()
@@ -257,6 +271,13 @@ class CreateBookPage(Page):
 
         self.keyword_entries.pop(len(self.keyword_entries) - 1)
         self.keyword_labels.pop(len(self.keyword_entries) - 1)
+
+        self.window.logger.log(LogData(
+            message="Keyword removed for page: {}",
+            source="view",
+            level="debug",
+            args=("CreateBook", )
+        ))
 
         if len(self.keyword_entries) == 0:
             self.keyword_delete_button.pack_forget()
@@ -279,6 +300,13 @@ class CreateBookPage(Page):
         )
         self.shelf_dropdown_list = [shelf.name for shelf in self.shelves]
         self.shelf_dropdown["values"] = self.shelf_dropdown_list
+
+        self.window.logger.log(LogData(
+            message="Shelves filtered for page: {}",
+            source="view",
+            level="info",
+            args=("CreateBook", )
+        ))
 
     def save_record(self):
         try:
@@ -310,12 +338,26 @@ class CreateBookPage(Page):
 
             if not result.success:
                 raise Exception(result.message)
+            
+            self.window.logger.log(LogData(
+                message="Record successfully saved for page: {}, \nRecord => Book: name={name} author={author} shelf={shelf}",
+                source="view",
+                level="info",
+                args=("CreateBook", ),
+                kwargs={"name": result.resource.name, "author": result.resource.author, "shelf": result.resource.shelf_id}
+            ))
 
             self.clear_widgets()
             self.window.notifier.show_notification(message=result.message)
 
         except Exception as e:
             self.window.notifier.show_notification(message=e)
+            self.window.logger.log(LogData(
+                message="Error while saving record for page: {}",
+                source="view",
+                level="error",
+                args=("CreateBook", )
+            ))
 
     def clear_widgets(self):
         for entry in self.entries:
@@ -330,3 +372,10 @@ class CreateBookPage(Page):
         self.keyword_delete_button.pack_forget()
         self.keyword_button_frame.grid_forget()
         self.keyword_frame.grid_forget()
+
+        self.window.logger.log(LogData(
+            message="Widgets cleared for page: {}",
+            source="view",
+            level="debug",
+            args=("CreateBook", )
+        ))

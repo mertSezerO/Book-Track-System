@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 
 from .page import Page
-from util.common import Colour
+from util.common import Colour, LogData
 from controllers import BookController
 
 class SearchResultsPage(Page):
@@ -77,6 +77,12 @@ class SearchResultsPage(Page):
         )
         self.back_button.grid(row=2,column=1,pady=10)
 
+        self.window.logger.log(LogData(
+            message="Widgets created for page: {}",
+            source="view",
+            level="debug",
+            args=("SearchResultPage", )
+        ))
         
     def search_by_criteria(self):
         if self.search_criteria:
@@ -95,6 +101,13 @@ class SearchResultsPage(Page):
 
         self.table_data = results
         self.tree_data = results.get_data()
+        self.window.logger.log(LogData(
+            message="Books fetched for page: {}, Result => Query={query} Number of Books:{size}",
+            source="view",
+            level="info",
+            args=("SearchResultPage", ),
+            kwargs={"query": self.search_criteria, "size": len(self.tree_data)}
+        ))
 
     def order_by_column(self, column_name: str):
         if self.order_column == column_name:
@@ -102,6 +115,13 @@ class SearchResultsPage(Page):
         
         self.order_column = column_name
         self.tree_data = self.table_data.sort_by_column(column_name)
+        self.window.logger.log(LogData(
+            message="Search table order for page: {}, Order By: {col}",
+            source="view",
+            level="info",
+            args=("SearchResultPage", ),
+            kwargs={"col": column_name}
+        ))
         self.reform_table()
 
     def reform_table(self):
@@ -111,3 +131,11 @@ class SearchResultsPage(Page):
         for i, row in enumerate(self.tree_data):
             tag = "evenrow" if i % 2 == 0 else "oddrow"
             self.tree.insert("", tk.END, values=row, tags=(tag,))
+
+        self.window.logger.log(LogData(
+            message="Search table reset for action: {}, Order By: {col}",
+            source="view",
+            level="info",
+            args=("SearchResultPage", ),
+            kwargs={"col": self.order_column}
+        ))

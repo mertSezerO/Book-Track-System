@@ -1,8 +1,7 @@
 import tkinter as tk
 
 from .page import Page
-from util.common import Colour
-from controllers import BookController
+from util.common import Colour, LogData
 from .search_results_page import SearchResultsPage
 
 class SearchPage(Page):
@@ -80,8 +79,21 @@ class SearchPage(Page):
             fg=Colour.BACKGROUND_COLOUR.value,
         )
         self.back_button.grid(row=2,column=1,pady=10)
+        self.window.logger.log(LogData(
+            message="Widgets created for page: {}",
+            source="view",
+            level="debug",
+            args=("SearchPage", )
+        ))
 
     def show_results(self):
         search_input = self.search_entry.get()
+        self.window.logger.log(LogData(
+            message="Search criteria created for page: {}, Query: {query}",
+            source="view",
+            level="info",
+            args=("SearchPage", ),
+            kwargs={"query": search_input}
+        ))
         self.window.switch_pages(new_page=SearchResultsPage, search_input=search_input)
         

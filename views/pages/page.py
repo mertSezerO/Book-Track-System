@@ -2,7 +2,6 @@ import tkinter as tk
 
 from util.common import Colour
 
-
 class Page(tk.Frame):
     def __init__(self, parent, window):
         super().__init__(parent)

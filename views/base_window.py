@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 
-from util import Notifier
+from util import Notifier, Logger
 from util.common import Colour
 from .pages.landing_page import LandingPage, Page
 
@@ -13,6 +13,7 @@ class BaseWindow:
         self.root.geometry(f"{width}x{height}")
 
         self.notifier = Notifier(self.root)
+        self.logger = Logger()
 
         self.set_styles()
         self.show_landing_page()

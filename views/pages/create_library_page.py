@@ -3,7 +3,7 @@ from tkinter import ttk
 
 from .page import Page
 from controllers import LibraryController
-from util.common import Colour
+from util.common import Colour, LogData
 
 
 class CreateLibraryPage(Page):
@@ -63,6 +63,13 @@ class CreateLibraryPage(Page):
         )
         self.back_button.pack(pady=10)
 
+        self.window.logger.log(LogData(
+            message="Widgets created for page: {}",
+            source="view",
+            level="debug",
+            args=("CreateLibrary", )
+        ))
+
     def save_record(self):
         try:
             name = self.entry.get()
@@ -71,11 +78,31 @@ class CreateLibraryPage(Page):
             if not result.success:
                 raise Exception(result.message)
 
+            self.window.logger.log(LogData(
+                message="Record successfully saved for page: {}, \nRecord => Library: name={name}",
+                source="view",
+                level="debug",
+                args=("CreateLibrary", ),
+                kwargs={"name": result.resource.name}
+            ))
+            
             self.clear_widgets()
             self.window.notifier.show_notification(message=result.message)
         
         except Exception as e:
             self.window.notifier.show_notification(message=e)
+            self.window.logger.log(LogData(
+                message="Error while saving record for page: {}",
+                source="view",
+                level="error",
+                args=("CreateLibrary", )
+            ))
 
     def clear_widgets(self):
         self.entry.delete(0, tk.END)
+        self.window.logger.log(LogData(
+            message="Widgets cleared for page: {}",
+            source="view",
+            level="debug",
+            args=("CreateLibrary", )
+        ))

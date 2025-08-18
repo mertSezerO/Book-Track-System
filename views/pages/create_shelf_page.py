@@ -3,7 +3,7 @@ from tkinter import ttk
 
 from .page import Page
 from controllers import LibraryController, ShelfController
-from util.common import Colour
+from util.common import Colour, LogData
 
 
 class CreateShelfPage(Page):
@@ -39,6 +39,13 @@ class CreateShelfPage(Page):
 
         self.libraries = LibraryController.get_libraries()
         self.dropdown_list = [library.name for library in self.libraries]
+
+        self.window.logger.log(LogData(
+            message="Libraries gathered for page: {}",
+            source="view",
+            level="debug",
+            args=("CreateShelf", )
+        ))
 
         self.dropdown_selected = tk.StringVar()
         self.dropdown = ttk.Combobox(
@@ -87,6 +94,12 @@ class CreateShelfPage(Page):
         )
         self.back_button.pack(pady=10)
 
+        self.window.logger.log(LogData(
+            message="Widgets created for page: {}",
+            source="view",
+            level="debug",
+            args=("CreateShelf", )
+        ))
 
     def save_record(self):
         try:
@@ -102,12 +115,33 @@ class CreateShelfPage(Page):
             if not result.success:
                 raise Exception(result.message)
 
+            self.window.logger.log(LogData(
+                message="Record successfully saved for page: {}, \nRecord => Shelf: name={name} library={lib}",
+                source="view",
+                level="info",
+                args=("CreateShelf", ),
+                kwargs={"name": result.resource.name, "lib": result.resource.library_id}
+            ))
+
             self.clear_widgets()
             self.window.notifier.show_notification(message=result.message)
         
         except Exception as e:
             self.window.notifier.show_notification(message=e)
+            self.window.logger.log(LogData(
+                message="Error while saving record for page: {}",
+                source="view",
+                level="error",
+                args=("CreateShelf", )
+            ))
 
     def clear_widgets(self):
         self.entry.delete(0, tk.END)
         self.dropdown.set("")
+
+        self.window.logger.log(LogData(
+            message="Widgets cleared for page: {}",
+            source="view",
+            level="debug",
+            args=("CreateShelf", )
+        ))

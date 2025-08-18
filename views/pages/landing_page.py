@@ -5,9 +5,7 @@ from .create_library_page import CreateLibraryPage
 from .create_shelf_page import CreateShelfPage
 from .create_book_page import CreateBookPage
 from .search_page import SearchPage
-from util.common import Colour
-from models import Library, Shelf, Book
-
+from util.common import Colour, LogData
 
 class LandingPage(Page):
 
@@ -87,14 +85,45 @@ class LandingPage(Page):
         )
         self.add_book_button.pack(pady=5)
 
+        self.window.logger.log(LogData(
+            message="Widgets created for page: {}",
+            source="view",
+            level="debug",
+            args=("LandingPage", )
+        ))
+
     def switch_to_create_library(self):
+        self.window.logger.log(LogData(
+            message="Switched to page: {}",
+            source="view",
+            level="info",
+            args=("CreateLibraryPage", )
+        ))
         self.window.switch_pages(new_page=CreateLibraryPage)
 
     def switch_to_add_shelf(self):
+        self.window.logger.log(LogData(
+            message="Switched to page: {}",
+            source="view",
+            level="info",
+            args=("CreateShelfPage", )
+        ))
         self.window.switch_pages(new_page=CreateShelfPage)
 
     def switch_to_add_book(self):
+        self.window.logger.log(LogData(
+            message="Switched to page: {}",
+            source="view",
+            level="info",
+            args=("CreateBookPage", )
+        ))
         self.window.switch_pages(new_page=CreateBookPage)
 
     def switch_to_search(self):
+        self.window.logger.log(LogData(
+            message="Switched to page: {}",
+            source="view",
+            level="info",
+            args=("SearchPage", )
+        ))
         self.window.switch_pages(new_page=SearchPage)
