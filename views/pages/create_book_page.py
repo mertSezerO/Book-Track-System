@@ -215,7 +215,7 @@ class CreateBookPage(Page):
             text="Remove Keyword",
             command=self.remove_keyword,
             font=("Arial", self.FONT_SIZE),
-            bg=Colour.ROUTE_BUTTON_COLOUR.value,
+            bg=Colour.ACTION_BUTTON_COLOUR.value,
             fg=Colour.BACKGROUND_COLOUR.value,
         )
 
@@ -281,33 +281,41 @@ class CreateBookPage(Page):
         self.shelf_dropdown["values"] = self.shelf_dropdown_list
 
     def save_record(self):
-        book_name = self.name_entry.get()
-        book_author = self.author_entry.get()
-        book_category = self.category_entry.get()
-        translator = self.translator_entry.get()
+        try:
+            book_name = self.name_entry.get()
+            book_author = self.author_entry.get()
+            book_category = self.category_entry.get()
+            translator = self.translator_entry.get()
 
-        keywords = [keyword.get() for keyword in self.keyword_entries]
-        shelf = next(
-            (
-                shelf
-                for shelf in self.shelves
-                if shelf.name == self.selected_shelf.get()
-            ),
-            None,
-        )
-        if shelf is None:
-            raise ReferenceError("Selected library is not exists!")
+            keywords = [keyword.get() for keyword in self.keyword_entries]
+            shelf = next(
+                (
+                    shelf
+                    for shelf in self.shelves
+                    if shelf.name == self.selected_shelf.get()
+                ),
+                None,
+            )
+            if shelf is None:
+                raise ReferenceError("Selected library is not exists!")
 
-        BookController.add_book(
-            name=book_name,
-            author=book_author,
-            category=book_category,
-            translator=translator,
-            shelf_id=shelf.shelf_id,
-            keywords=keywords,
-        )
+            result = BookController.add_book(
+                name=book_name,
+                author=book_author,
+                category=book_category,
+                translator=translator,
+                shelf_id=shelf.shelf_id,
+                keywords=keywords,
+            )
 
-        self.clear_widgets()
+            if not result.success:
+                raise Exception(result.message)
+
+            self.clear_widgets()
+            self.window.notifier.show_notification(message=result.message)
+
+        except Exception as e:
+            self.window.notifier.show_notification(message=e)
 
     def clear_widgets(self):
         for entry in self.entries:
@@ -318,3 +326,7 @@ class CreateBookPage(Page):
 
         self.shelf_dropdown.set("")
         self.library_dropdown.set("")
+
+        self.keyword_delete_button.pack_forget()
+        self.keyword_button_frame.grid_forget()
+        self.keyword_frame.grid_forget()

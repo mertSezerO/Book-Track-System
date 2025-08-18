@@ -1,17 +1,26 @@
 from models import Shelf, Book, Library
 from util import session, commit_changes
+from util.common import DBNotification
 
 
 class LibraryController:
 
     @staticmethod
-    def create_library(name: str):
-        is_library_exist = session.query(Library).filter_by(name=name).first()
-        if is_library_exist:
-            raise NameError("Library already exists!")
-        new_library = Library(name=name)
-        session.add(new_library)
-        commit_changes()
+    def create_library(name: str) -> DBNotification:
+        try:
+            is_library_exist = session.query(Library).filter_by(name=name).first()
+            if is_library_exist:
+                raise NameError("Library already exists!")
+            new_library = Library(name=name)
+            session.add(new_library)
+            commit_changes()
+            result = DBNotification(success=True, message="Library Added Successfully!", result=new_library)
+        
+        except Exception as e:
+            result = DBNotification(success=False, message=str(e))
+
+        finally:
+            return result
 
     @staticmethod
     def get_libraries():

@@ -2,7 +2,7 @@ from sqlalchemy import and_
 
 from models import Shelf, Book, Keyword, Library
 from util import session, commit_changes
-from util.common import TableData
+from util.common import TableData, DBNotification
 
 
 class BookController:
@@ -10,11 +10,15 @@ class BookController:
     @staticmethod
     def add_book(
         name: str, author: str, category: str, translator: str, shelf_id: int, keywords: list[str]
-    ):
+    ) -> DBNotification:
         try:
             shelf = session.query(Shelf).get(shelf_id)
             if not shelf:
                 raise ReferenceError("Incorrect shelf ID!")
+            
+            is_book_exist = session.query(Book).filter_by(name=name).first()
+            if is_book_exist:
+                raise NameError("The book already exist!")
 
             keyword_objs = []
             for keyword in keywords:
@@ -24,10 +28,6 @@ class BookController:
                     session.add(keyword_obj)
                 keyword_objs.append(keyword_obj)
 
-            is_book_exist = session.query(Book).filter_by(name=name).first()
-            if is_book_exist:
-                raise NameError("The book already exist!")
-
             new_book = Book(
                 name=name,
                 author=author,
@@ -36,14 +36,15 @@ class BookController:
                 shelf=shelf,
                 keywords=keyword_objs,
             )
-            print("Book Added!")
             session.add(new_book)
-        except:
-            pass
+            result = DBNotification(success=True, message="Book Added Successfully!", result=new_book)
+        
+        except Exception as e:
+            result = DBNotification(success=False, message=str(e))
 
         finally:
-            print("Committed!")
             commit_changes()
+            return result
 
     @staticmethod
     def get_book_by_name(book_name: str):

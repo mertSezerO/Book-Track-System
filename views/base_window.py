@@ -1,8 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 
-from copy import deepcopy
-
+from util import Notifier
 from util.common import Colour
 from .pages.landing_page import LandingPage, Page
 
@@ -12,6 +11,8 @@ class BaseWindow:
         self.root = tk.Tk()
         self.root.title(title)
         self.root.geometry(f"{width}x{height}")
+
+        self.notifier = Notifier(self.root)
 
         self.set_styles()
         self.show_landing_page()

@@ -89,16 +89,24 @@ class CreateShelfPage(Page):
 
 
     def save_record(self):
-        shelf_name = self.entry.get()
-        library = next(
-            (lib for lib in self.libraries if lib.name == self.dropdown_selected.get()),
-            None,
-        )
-        if library is None:
-            raise ReferenceError("Selected library is not exists!")
+        try:
+            shelf_name = self.entry.get()
+            library = next(
+                (lib for lib in self.libraries if lib.name == self.dropdown_selected.get()),
+                None,
+            )
+            if library is None:
+                raise ReferenceError("Selected library is not exists!")
 
-        ShelfController.create_shelf(name=shelf_name, library_id=library.library_id)
-        self.clear_widgets()
+            result = ShelfController.create_shelf(name=shelf_name, library_id=library.library_id)
+            if not result.success:
+                raise Exception(result.message)
+
+            self.clear_widgets()
+            self.window.notifier.show_notification(message=result.message)
+        
+        except Exception as e:
+            self.window.notifier.show_notification(message=e)
 
     def clear_widgets(self):
         self.entry.delete(0, tk.END)

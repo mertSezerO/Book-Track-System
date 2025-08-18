@@ -1,17 +1,27 @@
 from models import Shelf, Book
 from util import session, commit_changes
+from util.common import DBNotification
 
 
 class ShelfController:
 
     @staticmethod
-    def create_shelf(name: str, library_id: int):
-        is_shelf_exist = session.query(Shelf).filter_by(name=name).first()
-        if is_shelf_exist:
-            raise NameError("Shelf already exists!")
-        new_shelf = Shelf(name=name, library_id=library_id)
-        session.add(new_shelf)
-        commit_changes()
+    def create_shelf(name: str, library_id: int) -> DBNotification:
+        try:
+            is_shelf_exist = session.query(Shelf).filter_by(name=name).first()
+            if is_shelf_exist:
+                raise NameError("Shelf already exists!")
+            new_shelf = Shelf(name=name, library_id=library_id)
+            session.add(new_shelf)
+            commit_changes()
+            result = DBNotification(success=True, message="Shelf Created Successfully!", result=new_shelf)
+
+        except Exception as e:
+            result = DBNotification(success=False, message=str(e))
+
+        finally:
+            return result
+
 
     @staticmethod
     def get_shelves():

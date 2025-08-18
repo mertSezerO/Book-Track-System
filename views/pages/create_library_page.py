@@ -64,9 +64,18 @@ class CreateLibraryPage(Page):
         self.back_button.pack(pady=10)
 
     def save_record(self):
-        name = self.entry.get()
-        LibraryController.create_library(name)
-        self.clear_widgets()
+        try:
+            name = self.entry.get()
+            result = LibraryController.create_library(name)
+            
+            if not result.success:
+                raise Exception(result.message)
+
+            self.clear_widgets()
+            self.window.notifier.show_notification(message=result.message)
+        
+        except Exception as e:
+            self.window.notifier.show_notification(message=e)
 
     def clear_widgets(self):
         self.entry.delete(0, tk.END)
