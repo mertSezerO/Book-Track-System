@@ -58,7 +58,7 @@ class BaseWindow:
             arrowcolor=Colour.HEADER_TEXT_COLOUR.value
         )
 
-        self.window.logger.log(LogData(
+        self.logger.log(LogData(
             message="Widgets created for page: {}",
             source="view",
             level="debug",
@@ -67,7 +67,7 @@ class BaseWindow:
 
     def show_landing_page(self):
         self.previous_page = None
-        self.window.logger.log(LogData(
+        self.logger.log(LogData(
             message="Landing Page created for: {}",
             source="view",
             level="info",
@@ -97,7 +97,7 @@ class BaseWindow:
         self.current_page.pack(fill=tk.BOTH, expand=True)
 
     def run(self):
-        self.window.logger.log(LogData(
+        self.logger.log(LogData(
             message="Application ran successfully",
             source="view",
             level="info"
