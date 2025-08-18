@@ -1,9 +1,10 @@
 from models import Shelf, Book
-from util import session, commit_changes
-from util.common import DBNotification
+from util import session, commit_changes, Logger
+from util.common import DBNotification, LogData
 
 
 class ShelfController:
+    logger = Logger()
 
     @staticmethod
     def create_shelf(name: str, library_id: int) -> DBNotification:
@@ -14,10 +15,24 @@ class ShelfController:
             new_shelf = Shelf(name=name, library_id=library_id)
             session.add(new_shelf)
             commit_changes()
-            result = DBNotification(success=True, message="Shelf Created Successfully!", result=new_shelf)
+
+            result = DBNotification(success=True, message="Shelf Created Successfully!", resource=new_shelf)
+            ShelfController.logger.log(LogData(
+                message="Shelf created successfully! \nWith Fields => Shelf: name={name} library_id={id}",
+                source="controller",
+                level="info",
+                kwargs={"name": name, "id": library_id}
+            ))
 
         except Exception as e:
             result = DBNotification(success=False, message=str(e))
+            ShelfController.logger.log(LogData(
+                message="Error on library creation! Error Message: {} \nWith Fields => Library: name={name}",
+                source="controller",
+                level="error",
+                args=(str(e) ,),
+                kwargs={"name": name}
+            ))
 
         finally:
             return result
@@ -41,7 +56,22 @@ class ShelfController:
 
     @staticmethod
     def gather_library_shelves_by_id(library_id: int):
-        return session.query(Shelf).filter_by(library_id=library_id).all()
+        try:
+            shelves = session.query(Shelf).filter_by(library_id=library_id).all()
+            ShelfController.logger.log(LogData(
+                message="Shelves fetched successfully!",
+                source="controller",
+                level="info"
+            ))
+            return shelves
+
+        except Exception as e:
+            ShelfController.logger.log(LogData(
+                message="Error on shelves fetch! Error Message: {} ",
+                source="controller",
+                args=(str(e) ,),
+                level="error"
+            ))
 
     @staticmethod
     def gather_library_shelves_by_name(library_name: int):

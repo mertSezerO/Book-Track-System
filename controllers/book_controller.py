@@ -1,11 +1,12 @@
 from sqlalchemy import and_
 
 from models import Shelf, Book, Keyword, Library
-from util import session, commit_changes
-from util.common import TableData, DBNotification
+from util import session, commit_changes, Logger
+from util.common import TableData, DBNotification, LogData
 
 
 class BookController:
+    logger = Logger()
 
     @staticmethod
     def add_book(
@@ -25,6 +26,12 @@ class BookController:
                 keyword_obj = session.query(Keyword).filter_by(name=keyword).first()
                 if not keyword_obj:
                     keyword_obj = Keyword(name=keyword)
+                    BookController.logger.log(LogData(
+                        message="Keyword created successfully! \nWith Fields => Keyword: name={name} For => Book: {book_name}",
+                        source="controller",
+                        level="info",
+                        kwargs={"name":keyword, "book_name": name}
+                    ))
                     session.add(keyword_obj)
                 keyword_objs.append(keyword_obj)
 
@@ -37,10 +44,24 @@ class BookController:
                 keywords=keyword_objs,
             )
             session.add(new_book)
-            result = DBNotification(success=True, message="Book Added Successfully!", result=new_book)
+
+            result = DBNotification(success=True, message="Book Added Successfully!", resource=new_book)
+            BookController.logger.log(LogData(
+                message="Book created successfully! \nWith Fields => Book: name={name} author={author} category={category} shelf={shelf}",
+                source="controller",
+                level="info",
+                kwargs={"name": name, "author": author, "category": category, "shelf": shelf_id}
+            ))
         
         except Exception as e:
             result = DBNotification(success=False, message=str(e))
+            BookController.logger.log(LogData(
+                message="Error on book creation! Error Message: {} \nWith Fields => Book: name={name} author={author} category={category} shelf={shelf}",
+                source="controller",
+                level="error",
+                args=(str(e) ,),
+                kwargs={"name": name, "author": author, "category": category, "shelf": shelf_id}
+            ))
 
         finally:
             commit_changes()
@@ -48,7 +69,23 @@ class BookController:
 
     @staticmethod
     def get_book_by_name(book_name: str):
-        return session.query(Book).filter_by(name=book_name).first()
+        try:
+            book = session.query(Book).filter_by(name=book_name).first()
+            BookController.logger.log(LogData(
+                message="Book fetched successfully! \nFor Query => Book: name={name}",
+                source="controller",
+                level="info",
+                kwargs={"name": book_name}
+            ))
+            return book
+        except Exception as e:
+            BookController.logger.log(LogData(
+                message="Error on book creation! Error Message: {} \nFor Query => Book: name={name}}",
+                source="controller",
+                level="error",
+                args=(str(e) ,),
+                kwargs={"name": book_name}
+            ))
 
     @staticmethod
     def get_book_by_id(book_id: int):
@@ -78,21 +115,32 @@ class BookController:
 
     @staticmethod
     def search_books_by_criteria(criteria_dict: dict = None) -> TableData:
-        if criteria_dict:
-            filters = []
-            for field, value in criteria_dict.items():
-                column = getattr(Book, field, None)
-                if column is not None:
-                    filters.append(column.ilike(f"%{value}%"))
+        try:
+            if criteria_dict:
+                filters = []
+                for field, value in criteria_dict.items():
+                    column = getattr(Book, field, None)
+                    if column is not None:
+                        filters.append(column.ilike(f"%{value}%"))
 
-            if not filters:
-                return []
+                if not filters:
+                    return []
+                
+                results = session.query(Book).filter(and_(*filters)).join(Shelf).join(Library).all() 
             
-            results = session.query(Book).filter(and_(*filters)).join(Shelf).join(Library).all() 
+            else:
+                results = session.query(Book).join(Shelf).join(Library).all()
+            
+            BookController.logger.log(LogData(
+                message="Books fetched successfully! \nReturn Size:{size} For Query => Book: query={query}",
+                source="controller",
+                level="info",
+                kwargs={"size": len(results), "query": criteria_dict}
+            ))
+            return BookController.__convert_to_table_data(results)
         
-        else:
-            results = session.query(Book).join(Shelf).join(Library).all()
-        return BookController.__convert_to_table_data(results)
+        except Exception as e:
+            pass
     
     @staticmethod
     def __convert_to_table_data(data: list[Book]) -> TableData:
@@ -103,4 +151,9 @@ class BookController:
             data_tuple = (instance.book_id, instance.category, instance.name, instance.author, instance.translator, instance.shelf.library.name, instance.shelf.name)
             data_list.append(data_tuple)
         
+        BookController.logger.log(LogData(
+                message="Table data created successfully!",
+                source="controller",
+                level="debug"
+            ))
         return TableData(columns=columns, data_list=data_list)

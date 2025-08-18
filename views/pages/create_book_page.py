@@ -344,7 +344,7 @@ class CreateBookPage(Page):
                 source="view",
                 level="info",
                 args=("CreateBook", ),
-                kwargs={"name": result.resource.name, "author": result.resource.author, "shelf": result.resource.shelf_id}
+                kwargs={"name": result.resource.name, "author": result.resource.author, "category": result.resource.category,"shelf": result.resource.shelf_id}
             ))
 
             self.clear_widgets()

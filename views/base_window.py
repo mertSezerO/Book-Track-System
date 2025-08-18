@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 
 from util import Notifier, Logger
-from util.common import Colour
+from util.common import Colour, LogData
 from .pages.landing_page import LandingPage, Page
 
 
@@ -58,8 +58,21 @@ class BaseWindow:
             arrowcolor=Colour.HEADER_TEXT_COLOUR.value
         )
 
+        self.window.logger.log(LogData(
+            message="Widgets created for page: {}",
+            source="view",
+            level="debug",
+            args=("Window", )
+        ))
+
     def show_landing_page(self):
         self.previous_page = None
+        self.window.logger.log(LogData(
+            message="Landing Page created for: {}",
+            source="view",
+            level="info",
+            args=("Window", )
+        ))
         self.current_page = LandingPage(self.root, self)
 
     def switch_pages(self, new_page: Page = None, **kwargs):
@@ -84,4 +97,9 @@ class BaseWindow:
         self.current_page.pack(fill=tk.BOTH, expand=True)
 
     def run(self):
+        self.window.logger.log(LogData(
+            message="Application ran successfully",
+            source="view",
+            level="info"
+        ))
         self.root.mainloop()

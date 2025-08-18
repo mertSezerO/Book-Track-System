@@ -17,7 +17,7 @@ class Logger:
             "%(asctime)s %(levelname)s: %(message)s", "%Y-%m-%d %H:%M:%S"
         )
 
-        handler = logging.FileHandler(file)
+        handler = logging.FileHandler(filename=file, encoding="utf-8")
         handler.setFormatter(formatter)
         handler.setLevel(level)
 
