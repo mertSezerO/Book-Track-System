@@ -3,4 +3,5 @@ __pycache__/
 logs/
 
 notes.md
+credentials.json
 *.db
