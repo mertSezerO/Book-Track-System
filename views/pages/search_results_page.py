@@ -94,10 +94,10 @@ class SearchResultsPage(Page):
                     raise Exception("{} not a valid criteria!".format(key))
                 query[key] = value
     
-            results = BookController.search_books_by_criteria(query)
+            results = BookController.search_books_by_criteria(logger=self.window.logger, criteria_dict=query)
         
         else:
-            results = BookController.search_books_by_criteria()
+            results = BookController.search_books_by_criteria(logger=self.window.logger)
 
         self.table_data = results
         self.tree_data = results.get_data()

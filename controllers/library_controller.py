@@ -1,13 +1,12 @@
 from models import Shelf, Book, Library
-from util import session, commit_changes, Logger
+from util import session, commit_changes
 from util.common import DBNotification, LogData
 
 
 class LibraryController:
-    logger = Logger()
 
     @staticmethod
-    def create_library(name: str) -> DBNotification:
+    def create_library(logger, name: str) -> DBNotification:
         try:
             is_library_exist = session.query(Library).filter_by(name=name).first()
             if is_library_exist:
@@ -17,7 +16,7 @@ class LibraryController:
             commit_changes()
 
             result = DBNotification(success=True, message="Library Added Successfully!", resource=new_library)
-            LibraryController.logger.log(LogData(
+            logger.log(LogData(
                 message="Library created successfully! \nWith Fields => Library: name={name}",
                 source="controller",
                 level="info",
@@ -26,7 +25,7 @@ class LibraryController:
         
         except Exception as e:
             result = DBNotification(success=False, message=str(e))
-            LibraryController.logger.log(LogData(
+            logger.log(LogData(
                 message="Error on library creation! Error Message: {} \nWith Fields => Library: name={name}",
                 source="controller",
                 level="error",
@@ -38,10 +37,10 @@ class LibraryController:
             return result
 
     @staticmethod
-    def get_libraries():
+    def get_libraries(logger):
         try:
             libraries = session.query(Library).all()
-            LibraryController.logger.log(LogData(
+            logger.log(LogData(
                 message="Libraries fetched successfully!",
                 source="controller",
                 level="info"
@@ -49,7 +48,7 @@ class LibraryController:
             return libraries
         
         except Exception as e:
-            LibraryController.logger.log(LogData(
+            logger.log(LogData(
                 message="Error on library fetch! Error Message: {} ",
                 source="controller",
                 args=(str(e) ,),

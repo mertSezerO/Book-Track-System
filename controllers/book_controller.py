@@ -10,7 +10,7 @@ class BookController:
 
     @staticmethod
     def add_book(
-        name: str, author: str, category: str, translator: str, shelf_id: int, keywords: list[str]
+        logger, name: str, author: str, category: str, translator: str, shelf_id: int, keywords: list[str]
     ) -> DBNotification:
         try:
             shelf = session.query(Shelf).get(shelf_id)
@@ -26,7 +26,7 @@ class BookController:
                 keyword_obj = session.query(Keyword).filter_by(name=keyword).first()
                 if not keyword_obj:
                     keyword_obj = Keyword(name=keyword)
-                    BookController.logger.log(LogData(
+                    logger.log(LogData(
                         message="Keyword created successfully! \nWith Fields => Keyword: name={name} For => Book: {book_name}",
                         source="controller",
                         level="info",
@@ -46,7 +46,7 @@ class BookController:
             session.add(new_book)
 
             result = DBNotification(success=True, message="Book Added Successfully!", resource=new_book)
-            BookController.logger.log(LogData(
+            logger.log(LogData(
                 message="Book created successfully! \nWith Fields => Book: name={name} author={author} category={category} shelf={shelf}",
                 source="controller",
                 level="info",
@@ -55,7 +55,7 @@ class BookController:
         
         except Exception as e:
             result = DBNotification(success=False, message=str(e))
-            BookController.logger.log(LogData(
+            logger.log(LogData(
                 message="Error on book creation! Error Message: {} \nWith Fields => Book: name={name} author={author} category={category} shelf={shelf}",
                 source="controller",
                 level="error",
@@ -68,10 +68,10 @@ class BookController:
             return result
 
     @staticmethod
-    def get_book_by_name(book_name: str):
+    def get_book_by_name(logger, book_name: str):
         try:
             book = session.query(Book).filter_by(name=book_name).first()
-            BookController.logger.log(LogData(
+            logger.log(LogData(
                 message="Book fetched successfully! \nFor Query => Book: name={name}",
                 source="controller",
                 level="info",
@@ -79,7 +79,7 @@ class BookController:
             ))
             return book
         except Exception as e:
-            BookController.logger.log(LogData(
+            logger.log(LogData(
                 message="Error on book creation! Error Message: {} \nFor Query => Book: name={name}}",
                 source="controller",
                 level="error",
@@ -114,7 +114,7 @@ class BookController:
         return False
 
     @staticmethod
-    def search_books_by_criteria(criteria_dict: dict = None) -> TableData:
+    def search_books_by_criteria(logger, criteria_dict: dict = None) -> TableData:
         try:
             if criteria_dict:
                 filters = []
@@ -131,19 +131,19 @@ class BookController:
             else:
                 results = session.query(Book).join(Shelf).join(Library).all()
             
-            BookController.logger.log(LogData(
+            logger.log(LogData(
                 message="Books fetched successfully! \nReturn Size:{size} For Query => Book: query={query}",
                 source="controller",
                 level="info",
                 kwargs={"size": len(results), "query": criteria_dict}
             ))
-            return BookController.__convert_to_table_data(results)
+            return BookController.__convert_to_table_data(logger, results)
         
         except Exception as e:
             pass
     
     @staticmethod
-    def __convert_to_table_data(data: list[Book]) -> TableData:
+    def __convert_to_table_data(logger, data: list[Book]) -> TableData:
         columns = ["Book ID", "Category", "Book Name", "Author", "Translator", "Library Name", "Shelf Name"]
         data_list = []
 
@@ -151,7 +151,7 @@ class BookController:
             data_tuple = (instance.book_id, instance.category, instance.name, instance.author, instance.translator, instance.shelf.library.name, instance.shelf.name)
             data_list.append(data_tuple)
         
-        BookController.logger.log(LogData(
+        logger.log(LogData(
                 message="Table data created successfully!",
                 source="controller",
                 level="debug"

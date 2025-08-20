@@ -73,7 +73,7 @@ class CreateLibraryPage(Page):
     def save_record(self):
         try:
             name = self.entry.get()
-            result = LibraryController.create_library(name)
+            result = LibraryController.create_library(logger=self.window.logger, name=name)
             
             if not result.success:
                 raise Exception(result.message)

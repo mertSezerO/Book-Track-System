@@ -37,7 +37,7 @@ class CreateShelfPage(Page):
         )
         dropdown_label.pack(pady=10)
 
-        self.libraries = LibraryController.get_libraries()
+        self.libraries = LibraryController.get_libraries(self.window.logger)
         self.dropdown_list = [library.name for library in self.libraries]
 
         self.window.logger.log(LogData(
@@ -111,7 +111,7 @@ class CreateShelfPage(Page):
             if library is None:
                 raise ReferenceError("Selected library is not exists!")
 
-            result = ShelfController.create_shelf(name=shelf_name, library_id=library.library_id)
+            result = ShelfController.create_shelf(logger=self.window.logger,name=shelf_name, library_id=library.library_id)
             if not result.success:
                 raise Exception(result.message)
 

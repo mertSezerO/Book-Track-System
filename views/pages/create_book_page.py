@@ -54,7 +54,7 @@ class CreateBookPage(Page):
         )
         library_label.pack(pady=5)
 
-        self.libraries = LibraryController.get_libraries()
+        self.libraries = LibraryController.get_libraries(logger=self.window.logger)
         self.library_dropdown_list = [library.name for library in self.libraries]
 
         self.selected_library = tk.StringVar()
@@ -296,7 +296,7 @@ class CreateBookPage(Page):
             raise ReferenceError("Selected library is not exists!")
 
         self.shelves = ShelfController.gather_library_shelves_by_id(
-            library_id=library.library_id
+            logger=self.window.logger, library_id=library.library_id
         )
         self.shelf_dropdown_list = [shelf.name for shelf in self.shelves]
         self.shelf_dropdown["values"] = self.shelf_dropdown_list
@@ -328,6 +328,7 @@ class CreateBookPage(Page):
                 raise ReferenceError("Selected library is not exists!")
 
             result = BookController.add_book(
+                logger=self.window.logger,
                 name=book_name,
                 author=book_author,
                 category=book_category,
