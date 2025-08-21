@@ -1,5 +1,5 @@
 from models import Shelf, Book, Library
-from util import session, commit_changes
+from util import DatabaseConnector
 from util.common import DBNotification, LogData
 
 
@@ -8,12 +8,12 @@ class LibraryController:
     @staticmethod
     def create_library(logger, name: str) -> DBNotification:
         try:
-            is_library_exist = session.query(Library).filter_by(name=name).first()
+            is_library_exist = DatabaseConnector.session.query(Library).filter_by(name=name).first()
             if is_library_exist:
                 raise NameError("Library already exists!")
             new_library = Library(name=name)
-            session.add(new_library)
-            commit_changes()
+            DatabaseConnector.session.add(new_library)
+            DatabaseConnector.commit_changes(logger)
 
             result = DBNotification(success=True, message="Library Added Successfully!", resource=new_library)
             logger.log(LogData(
@@ -22,6 +22,7 @@ class LibraryController:
                 level="info",
                 kwargs={"name": name}
             ))
+            return result
         
         except Exception as e:
             result = DBNotification(success=False, message=str(e))
@@ -32,14 +33,12 @@ class LibraryController:
                 args=(str(e) ,),
                 kwargs={"name": name}
             ))
-
-        finally:
             return result
 
     @staticmethod
     def get_libraries(logger):
         try:
-            libraries = session.query(Library).all()
+            libraries = DatabaseConnector.session.query(Library).all()
             logger.log(LogData(
                 message="Libraries fetched successfully!",
                 source="controller",
@@ -57,16 +56,16 @@ class LibraryController:
 
     @staticmethod
     def get_library_by_id(library_id: int):
-        return session.query(Library).get(library_id)
+        return DatabaseConnector.session.query(Library).get(library_id)
 
     @staticmethod
     def get_library_by_name(library_name: str):
-        return session.query(Library).filter_by(name=library_name).first()
+        return DatabaseConnector.session.query(Library).filter_by(name=library_name).first()
 
     @staticmethod
     def find_library_books_by_id(library_id: str):
         return (
-            session.query(Book)
+            DatabaseConnector.session.query(Book)
             .join(Book.shelf)
             .join(Shelf.library)
             .filter_by(library_id=library_id)
@@ -76,7 +75,7 @@ class LibraryController:
     @staticmethod
     def find_library_books_by_name(library_name: str):
         return (
-            session.query(Book)
+            DatabaseConnector.session.query(Book)
             .join(Book.shelf)
             .join(Shelf.library)
             .filter(Library.name == library_name)
@@ -84,8 +83,8 @@ class LibraryController:
         )
 
     @staticmethod
-    def update_library_name(library_id: int, new_name: str):
-        session.query(Library).filter_by(library_id=library_id).update(
+    def update_library_name(logger, library_id: int, new_name: str):
+        DatabaseConnector.session.query(Library).filter_by(library_id=library_id).update(
             {"name": new_name}
         )
-        commit_changes()
+        DatabaseConnector.commit_changes(logger)

@@ -4,4 +4,5 @@ logs/
 
 notes.md
 credentials.json
+client_secrets.json
 *.db

@@ -1,14 +1,14 @@
+import sqlite3
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 from models import Base
 from util.common import LogData
+from .gauth import GoogleDriveUploader
 
 class DatabaseConnector:
     engine = None
     session = None
-    engine_backup = None
-    session_backup = None
 
     @classmethod
     def configure(cls):
@@ -16,13 +16,7 @@ class DatabaseConnector:
         Session = sessionmaker(bind=cls.engine)
         cls.session = Session()
 
-        cls.engine_backup = create_engine("sqlite:///data/iskenderiye_backup.db", echo=False)
-        BackupSession = sessionmaker(bind=cls.engine_backup)
-        cls.session_backup = BackupSession()
-
         Base.metadata.create_all(cls.engine)
-        Base.metadata.create_all(cls.engine_backup)
-
 
     @classmethod
     def commit_changes(cls, logger):
@@ -31,7 +25,6 @@ class DatabaseConnector:
                 raise ConnectionError("Database connection is not made yet!")
 
             cls.session.commit()
-            cls.session_backup.commit()
 
             logger.log(LogData(
                 message="Changes added successfully to both DBs.",
@@ -48,3 +41,30 @@ class DatabaseConnector:
                 level="error"
             ))
 
+    @classmethod
+    def upload_backup(cls, logger):
+        try:
+            uploader = GoogleDriveUploader()
+            folder_id = None
+
+            src = sqlite3.connect("data/iskenderiye.db")
+            dst = sqlite3.connect("data/iskenderiye.backup.db") 
+
+            with dst:
+                src.backup(dst) 
+
+            file_id = uploader.upload_file("data/iskenderiye.backup.db", folder_id=folder_id)
+            logger.log(LogData(
+                message="Backup uploaded successfully to Google Drive. File ID: {id}",
+                source="controller",
+                level="info",
+                kwargs={"id": file_id}
+            ))
+
+        except Exception as e:
+            logger.log(LogData(
+                message="Google Drive upload failed: {}",
+                source="controller",
+                level="error",
+                args=(e, )
+            ))

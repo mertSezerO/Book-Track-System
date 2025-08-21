@@ -1,6 +1,6 @@
 from views import BaseWindow
-from util import create_tables
+from util import DatabaseConnector
 
-create_tables()
+DatabaseConnector.configure()
 window = BaseWindow(width=1600, height=900)
 window.run()

@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 
-from util import Notifier, Logger
+from util import Notifier, Logger, DatabaseConnector
 from util.common import Colour, LogData
 from .pages.landing_page import LandingPage, Page
 
@@ -17,6 +17,19 @@ class BaseWindow:
 
         self.set_styles()
         self.show_landing_page()
+
+        self.root.protocol("WM_DELETE_WINDOW", self.on_close)
+
+    def on_close(self):
+        DatabaseConnector.upload_backup(self.logger)
+
+        self.logger.log(LogData(
+            message="Application closed.",
+            source="view",
+            level="info"
+        ))
+
+        self.root.destroy()
 
     def set_styles(self):
         dropdown_style = ttk.Style()

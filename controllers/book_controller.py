@@ -1,7 +1,7 @@
 from sqlalchemy import and_
 
 from models import Shelf, Book, Keyword, Library
-from util import session, commit_changes, Logger
+from util import DatabaseConnector, Logger
 from util.common import TableData, DBNotification, LogData
 
 
@@ -13,17 +13,17 @@ class BookController:
         logger, name: str, author: str, category: str, translator: str, shelf_id: int, keywords: list[str]
     ) -> DBNotification:
         try:
-            shelf = session.query(Shelf).get(shelf_id)
+            shelf = DatabaseConnector.session.query(Shelf).get(shelf_id)
             if not shelf:
                 raise ReferenceError("Incorrect shelf ID!")
             
-            is_book_exist = session.query(Book).filter_by(name=name).first()
+            is_book_exist = DatabaseConnector.session.query(Book).filter_by(name=name).first()
             if is_book_exist:
                 raise NameError("The book already exist!")
 
             keyword_objs = []
             for keyword in keywords:
-                keyword_obj = session.query(Keyword).filter_by(name=keyword).first()
+                keyword_obj = DatabaseConnector.session.query(Keyword).filter_by(name=keyword).first()
                 if not keyword_obj:
                     keyword_obj = Keyword(name=keyword)
                     logger.log(LogData(
@@ -32,9 +32,10 @@ class BookController:
                         level="info",
                         kwargs={"name":keyword, "book_name": name}
                     ))
-                    session.add(keyword_obj)
+                    DatabaseConnector.session.add(keyword_obj)
                 keyword_objs.append(keyword_obj)
 
+            DatabaseConnector.commit_changes(logger)
             new_book = Book(
                 name=name,
                 author=author,
@@ -43,7 +44,8 @@ class BookController:
                 shelf=shelf,
                 keywords=keyword_objs,
             )
-            session.add(new_book)
+            DatabaseConnector.session.add(new_book)
+            DatabaseConnector.commit_changes(logger)
 
             result = DBNotification(success=True, message="Book Added Successfully!", resource=new_book)
             logger.log(LogData(
@@ -52,6 +54,7 @@ class BookController:
                 level="info",
                 kwargs={"name": name, "author": author, "category": category, "shelf": shelf_id}
             ))
+            return result
         
         except Exception as e:
             result = DBNotification(success=False, message=str(e))
@@ -62,15 +65,12 @@ class BookController:
                 args=(str(e) ,),
                 kwargs={"name": name, "author": author, "category": category, "shelf": shelf_id}
             ))
-
-        finally:
-            commit_changes()
             return result
 
     @staticmethod
     def get_book_by_name(logger, book_name: str):
         try:
-            book = session.query(Book).filter_by(name=book_name).first()
+            book = DatabaseConnector.session.query(Book).filter_by(name=book_name).first()
             logger.log(LogData(
                 message="Book fetched successfully! \nFor Query => Book: name={name}",
                 source="controller",
@@ -89,20 +89,20 @@ class BookController:
 
     @staticmethod
     def get_book_by_id(book_id: int):
-        return session.query(Book).get(book_id)
+        return DatabaseConnector.session.query(Book).get(book_id)
 
     @staticmethod
     def get_books_by_author(author: str):
-        return session.query(Book).filter_by(author=author).all()
+        return DatabaseConnector.session.query(Book).filter_by(author=author).all()
 
     @staticmethod
     def get_books_by_keyword(keyword: str):
-        return session.query(Book).join(Keyword).filter(Keyword.name == keyword).all()
+        return DatabaseConnector.session.query(Book).join(Keyword).filter(Keyword.name == keyword).all()
 
     @staticmethod
-    def update_book_name(book_id: int, new_name: str):
-        session.query(Book).filter_by(book_id=book_id).update({"name": new_name})
-        commit_changes()
+    def update_book_name(logger, book_id: int, new_name: str):
+        DatabaseConnector.session.query(Book).filter_by(book_id=book_id).update({"name": new_name})
+        DatabaseConnector.commit_changes(logger)
 
     @staticmethod
     def check_column_name(name: str):
@@ -126,10 +126,10 @@ class BookController:
                 if not filters:
                     return []
                 
-                results = session.query(Book).filter(and_(*filters)).join(Shelf).join(Library).all() 
+                results = DatabaseConnector.session.query(Book).filter(and_(*filters)).join(Shelf).join(Library).all() 
             
             else:
-                results = session.query(Book).join(Shelf).join(Library).all()
+                results = DatabaseConnector.session.query(Book).join(Shelf).join(Library).all()
             
             logger.log(LogData(
                 message="Books fetched successfully! \nReturn Size:{size} For Query => Book: query={query}",

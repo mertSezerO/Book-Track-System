@@ -4,4 +4,4 @@ from dataclasses import dataclass
 class DBNotification:
     success: bool
     message: str
-    resource: object | None
+    resource: object = None

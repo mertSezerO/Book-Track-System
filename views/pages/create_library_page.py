@@ -92,10 +92,11 @@ class CreateLibraryPage(Page):
         except Exception as e:
             self.window.notifier.show_notification(message=e)
             self.window.logger.log(LogData(
-                message="Error while saving record for page: {}",
+                message="Error while saving record for page: {} with error {err}",
                 source="view",
                 level="error",
-                args=("CreateLibrary", )
+                args=("CreateLibrary", ),
+                kwargs={"err": e}
             ))
 
     def clear_widgets(self):
