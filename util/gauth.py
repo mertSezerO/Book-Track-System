@@ -2,25 +2,23 @@ from pydrive2.auth import GoogleAuth
 from pydrive2.drive import GoogleDrive
 import os
 
+from .config import Config
+
 class GoogleDriveUploader:
     def __init__(self):
         self.gauth = GoogleAuth()
 
-        # Use the client_secrets.json for first login
-        self.gauth.LoadClientConfigFile("client_secrets.json")
-
-        # Try to load saved credentials
-        self.gauth.LoadCredentialsFile("credentials.json")
+        self.gauth.LoadClientConfigFile(f"{Config.token_path}/{Config.client_secret}")
+        self.gauth.LoadCredentialsFile(f"{Config.token_path}/{Config.credentials}")
 
         if self.gauth.credentials is None:
-            self.gauth.LocalWebserverAuth()  # first time, will open browser
+            self.gauth.LocalWebserverAuth() 
         elif self.gauth.access_token_expired:
             self.gauth.Refresh()
         else:
             self.gauth.Authorize()
 
-        # Save for next time
-        self.gauth.SaveCredentialsFile("credentials.json")
+        self.gauth.SaveCredentialsFile(f"{Config.token_path}/{Config.credentials}")
 
         self.drive = GoogleDrive(self.gauth)
 
@@ -30,11 +28,14 @@ class GoogleDriveUploader:
         """
         filename = os.path.basename(filepath)
 
-        file_metadata = {"name": filename}
-        if folder_id:
-            file_metadata["parents"] = [folder_id]
+        if Config.backup_reference:
+            gfile = self.drive.CreateFile({'id': Config.backup_reference})
+        else:
+            file_metadata = {"name": filename}
+            if folder_id:
+                file_metadata["parents"] = [folder_id]
+            gfile = self.drive.CreateFile(file_metadata)
 
-        gfile = self.drive.CreateFile(file_metadata)
         gfile.SetContentFile(filepath)
         gfile.Upload()
 

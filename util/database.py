@@ -5,6 +5,7 @@ from sqlalchemy.orm import sessionmaker
 from models import Base
 from util.common import LogData
 from .gauth import GoogleDriveUploader
+from .config import Config
 
 class DatabaseConnector:
     engine = None
@@ -12,7 +13,7 @@ class DatabaseConnector:
 
     @classmethod
     def configure(cls):
-        cls.engine = create_engine("sqlite:///data/iskenderiye.db", echo=False)
+        cls.engine = create_engine(Config.database_url, echo=False)
         Session = sessionmaker(bind=cls.engine)
         cls.session = Session()
 
@@ -47,13 +48,14 @@ class DatabaseConnector:
             uploader = GoogleDriveUploader()
             folder_id = None
 
-            src = sqlite3.connect("data/iskenderiye.db")
-            dst = sqlite3.connect("data/iskenderiye.backup.db") 
+            src = sqlite3.connect(f"{Config.database_path}/{Config.database_name}")
+            dst = sqlite3.connect(f"{Config.database_path}/{Config.backup_name}") 
 
             with dst:
                 src.backup(dst) 
 
-            file_id = uploader.upload_file("data/iskenderiye.backup.db", folder_id=folder_id)
+            file_id = uploader.upload_file(f"{Config.database_path}/{Config.backup_name}", folder_id=folder_id)
+            Config.save_file_id(file_id)
             logger.log(LogData(
                 message="Backup uploaded successfully to Google Drive. File ID: {id}",
                 source="controller",
