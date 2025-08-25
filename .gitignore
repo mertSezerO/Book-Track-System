@@ -2,7 +2,11 @@ venv/
 __pycache__/
 logs/
 tokens/
+build/
+dist/
 
 notes.md
 *.db
+icon.png
+main.spec
 info.env

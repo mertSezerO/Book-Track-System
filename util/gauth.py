@@ -6,7 +6,7 @@ from .config import Config
 
 class GoogleDriveUploader:
     def __init__(self):
-        self.gauth = GoogleAuth()
+        self.gauth = GoogleAuth(settings_file=f"{Config.token_path}/{Config.settings_file}")
 
         self.gauth.LoadClientConfigFile(f"{Config.token_path}/{Config.client_secret}")
         self.gauth.LoadCredentialsFile(f"{Config.token_path}/{Config.credentials}")

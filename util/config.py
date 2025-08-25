@@ -22,6 +22,7 @@ class Config:
         cls.token_path = os.getenv("TOKEN_PATH")
         cls.client_secret = os.getenv("CLIENT_SECRET")
         cls.credentials = os.getenv("CREDENTIALS")
+        cls.settings_file = os.getenv("SETTINGS_FILE")
         cls.backup_reference = os.getenv("FILE_ID")
         
     def save_file_id(file_id: str, key: str = "FILE_ID", env_file: str = "info.env"):
